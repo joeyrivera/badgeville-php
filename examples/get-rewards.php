@@ -35,9 +35,4 @@ use Badgeville\Client;
 
 $client = new Client(require_once 'config.php');
 
-var_dump($client->players('53d6530a88b616814400657c', [
-    'positions',
-    'activities',
-    'rewards',
-    'missions'
-]));
+var_dump($client->rewards());
