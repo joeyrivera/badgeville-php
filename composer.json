@@ -1,0 +1,27 @@
+{
+    "name": "joeyrivera/badgeville-php",
+    "description": "Badgeville Cairo SDK for PHP",
+    "keywords": ["badgeville", "sdk"],
+    "type": "library",
+    "homepage": "https://github.com/joeyrivera/badgeville-php",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joey Rivera",
+            "homepage": "http://www.joeyrivera.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "guzzlehttp/guzzle": "4.*",
+        "phpunit/phpunit": "4.*"
+    },
+    "require-dev": {
+    
+    },
+    "autoload": {
+        "psr-4": {
+            "Badgeville\\": "src/Badgeville/"
+        }
+    }
+}
