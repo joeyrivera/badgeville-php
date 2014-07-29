@@ -35,23 +35,17 @@ use Badgeville\Client;
  */
 class PlayerActivities 
 {
-    protected $client;
-    protected $parentId;
+    protected $parent;
     protected $data = [];
     
     /**
      * take in client or config
      * @param type $client
      */
-    public function __construct($client, $parentId)
+    public function __construct($parent)
     {
         
-        if (!$client instanceof Client) {
-            throw new \Exception("invalid client");
-        }
-        
-        $this->client = $client;
-        $this->parentId = $parentId;
+        $this->parent = $parent;
         return $this;
     }
     
@@ -69,9 +63,9 @@ class PlayerActivities
     
     public function findAll(array $params = [])
     {
-        $uri = "players/{$this->parentId}/activities";
+        $uri = "players/{$this->parent->id}/activities";
          
-        $response = $this->client->getRequest($uri, $params);
+        $response = $this->parent->getClient()->getRequest($uri, $params);
         
         // convert to our stuff
         $collection = [];

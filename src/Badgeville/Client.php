@@ -56,20 +56,18 @@ class Client
     public function __call($name, array $params = [])
     {
         $newName = __NAMESPACE__. '\\' . ucwords($name);
-        return new $newName($this);
-        
-        //return $this->getRequest($uri);
+        return new $newName($this, $params[0]);
     }
     
-    public function info(array $params = [])
-    {
-        $uri = '';
-        if (!empty($params)) {
-            $uri = "?includes=" . implode(',', $params);
-        }
-        
-        return $this->getRequest($uri);
-    }
+//    public function info(array $params = [])
+//    {
+//        $uri = '';
+//        if (!empty($params)) {
+//            $uri = "?includes=" . implode(',', $params);
+//        }
+//        
+//        return $this->getRequest($uri);
+//    }
     
     public function getRequest($uri, $params = [])
     {

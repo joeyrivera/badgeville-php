@@ -43,7 +43,7 @@ class Players
      * take in client or config
      * @param type $client
      */
-    public function __construct($client)
+    public function __construct($client, $id = null)
     {
         
         if (!$client instanceof Client) {
@@ -51,6 +51,8 @@ class Players
         }
         
         $this->client = $client;
+        
+        $this->data['id'] = $id;
         
         return $this;
     }
@@ -65,6 +67,11 @@ class Players
     public function getData()
     {
         return $this->data;
+    }
+    
+    public function __get($key)
+    {
+        return $this->data[$key];
     }
     
     public function findAll(array $params = [])
@@ -96,12 +103,17 @@ class Players
     public function activities()
     {
         // make sure we have loaded this guys or have the id first
-        return new PlayerActivities($this->client, $this->data['id']);
+        return new PlayerActivities($this);
     }
     
     public function toArray()
     {
         return $this->data;
+    }
+    
+    public function getClient()
+    {
+        return $this->client;
     }
     
 }
