@@ -35,32 +35,9 @@ use Badgeville\Client;
 
 $client = new Client(require_once 'config.php');
 
-//var_dump($client->players('53d6530a88b616814400657c', [
-//    'positions',
-//    'activities',
-//    'rewards',
-//    'missions'
-//]));
-
-//var_dump($client->players('53d6530a88b616814400657c')->activities('53d69a1c6173b187d20065a3'));
-//$players = $client->players()->findAll();
-//var_dump($players);
-
-//$player = $players[0];
-//var_dump($player->toArray());
-
-//$activities = $player->activities()->findAll();
-//var_dump($activities);
-
-
-$player = $client->players()->find('53d6530a88b616814400657c');
-var_dump($player->toArray());
-
-$activities = $player->activities()->findAll();
-foreach ($activities as $activity) {
-    var_dump($activity->toArray());
-}
-
-
-
-
+var_dump($client->players('53d6530a88b616814400657c', [
+    'positions',
+    'activities',
+    'rewards',
+    'missions'
+]));

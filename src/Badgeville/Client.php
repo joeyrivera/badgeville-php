@@ -55,22 +55,10 @@ class Client
     
     public function __call($name, array $params = [])
     {
-        list($id, $includes) = $params;
+        $newName = __NAMESPACE__. '\\' . ucwords($name);
+        return new $newName($this);
         
-        // make sure is valid
-        $uri = $name;
-        
-        // id passed?
-        if (!empty($id)) {
-            $uri .= "/{$id}";
-        }
-        
-        // includes?
-        if (!empty($includes)) {
-            $uri .= "?includes=" . implode(',', $includes);
-        }
-        
-        return $this->getRequest($uri);
+        //return $this->getRequest($uri);
     }
     
     public function info(array $params = [])
@@ -83,8 +71,15 @@ class Client
         return $this->getRequest($uri);
     }
     
-    protected function getRequest($uri)
+    public function getRequest($uri, $params = [])
     {
+        // make sure uri isn't absolute - remove first / if there
+        
+        
+        if (!empty($params)) {
+            $uri .= '?' . http_build_query($params);
+        }
+
         try {
             $request = $this->client->createRequest('GET', $uri);
             $response = $this->client->send($request)->json(['object' => $this->config['responseAsObject']]);

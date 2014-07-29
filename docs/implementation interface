@@ -1,0 +1,58 @@
+First instantiate client
+    $client = new Client($config);
+
+Next if the site, that's the root node for all calls
+    $site = $client->getSite($id);
+
+Now we can go through all objects with chaining if needed
+    // get many players
+    $players = $site->getPlayers();
+    $players = $site->getPlayers(['with_count' => true, 'with_links' => true]);
+
+    // get a player
+    $player = $site->getPlayer($id);
+    $player = $site->getPlayer($id, ['includes' => ['positions', 'activities']]);
+
+    // update player
+    $player = $site->savePlayer($player);
+
+    // new player
+    $player = new Badgeville\Entities\Player($params);
+    $player->save();
+        or
+    $site->savePlayer($player); // just a thought, $site->save($player);
+
+
+// progresses can only be called via chaining through player so lets make sure that works
+    // get progresses
+    $progresses = $site->players($id)->progresses();
+
+
+
+// get a site
+$site = $client->sites($id, $params);
+$site = $client->sites()->find($id, $params);
+
+$players = $site->players()->findAll($params);
+
+// get a player
+$player = $site->players($id, $params);
+$player = $site->players()->find($id, $params);
+
+//get a team player
+$player = $site->teams()->players()->find($teamId, $id, $params);
+$player = $site->teams($teamId)->players()->find($id, $params);
+
+
+// update player
+$site->players()->save($player);
+$site->players($id)->save($player);
+
+// get an activity
+$activity = $site->activities($playerId, $activityId, $params);
+$activity = $site->players()->activities()->find($playerId, $id, $params);
+$activity = $site->players($playerId)->activities()->find($id, $params);
+
+
+// missions
+$rewards = $site->players()->missionhistories()->rewards()->find($playerId, $missionsHistoryId, $id);
