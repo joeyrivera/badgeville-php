@@ -45,6 +45,7 @@ while (false !== ($entry = $dir->read())) {
 if (!empty($_GET['class'])) {
     $class = strtolower(trim($_GET['class']));
     $id = !empty($_GET['id']) ? trim($_GET['id']) : null;
+    $includes = !empty($_GET['includes']) ? ['includes' => strtolower(trim($_GET['includes']))] : [];
     
     // check for config file
     if (!is_file('config.php')) {
@@ -54,7 +55,7 @@ if (!empty($_GET['class'])) {
     $site = new Site(require_once 'config.php');
 
     if (!empty($id)) {
-        $data = $site->$class()->find($id)->toArray();
+        $data = $site->$class()->find($id, $includes)->toArray();
     } else {
         $items = $site->$class()->findAll();
         foreach ($items as $item) {
@@ -65,11 +66,13 @@ if (!empty($_GET['class'])) {
 ?>
 
 <h3>Available Resources</h3>
-<p>click on the resource name to do a find all, else type in an id and click submit for find</p>
+<p>click on the resource name to do a find all, else type in an id and click submit for find. You 
+can also pass a comma delimited string for includes</p>
 <?php foreach ($resources as $resource) :?>
 <form>
     <a href="?class=<?=$resource?>"><?=$resource?></a> 
-    <input type="text" name="id">
+    <label>Id</label><input type="text" name="id">
+    <label>Includes</label><input type="text" name="includes">
     <input type="hidden" name="class" value="<?=$resource?>">
     <input type="submit">
 </form>
