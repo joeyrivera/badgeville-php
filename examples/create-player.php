@@ -31,13 +31,13 @@ if (!is_file('config.php')) {
     throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
 
-use Badgeville\Client;
+use Badgeville\Site;
 
-$client = new Client(require_once 'config.php');
+$site = new Site(require_once 'config.php');
 
-$player = $client->players()->create([
-    'name' => 'Joey Tester2',
-    'email' => 'joeyrivera@air-watch.com2'
+$player = $site->players()->create([
+    'name' => 'Joey Tester3',
+    'email' => 'joeyrivera@air-watch.com3'
 ]);
 
 var_dump($player->toArray());
