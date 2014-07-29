@@ -34,29 +34,10 @@ if (!is_file('config.php')) {
 use Badgeville\Client;
 
 $client = new Client(require_once 'config.php');
+//$player = $client->players()->find('53d7dd5d6173b1c1ca006c22');
+//$player = $client->players()->find('joeyrivera@air-watch.com', [
+$player = $client->players()->find('53d6530a88b616814400657c', [
+    'includes' => 'rewards,positions,activities'
+]);
 
-$players = $client->players()->findAll();
-foreach ($players as $player) {
-    var_dump($player->toArray());
-}
-
-
-//$player = $players[0];
-//var_dump($player->toArray());
-
-//$activities = $player->activities()->findAll();
-//var_dump($activities);
-
-
-//$player = $client->players()->find('53d6530a88b616814400657c');
-//var_dump($player->toArray());
-
-//$activities = $player->activities()->findAll();
-//$activities = $client->players('53d6530a88b616814400657c')->activities()->findAll();
-//foreach ($activities as $activity) {
-//    var_dump($activity->toArray());
-//}
-
-
-
-
+var_dump($player->toArray());

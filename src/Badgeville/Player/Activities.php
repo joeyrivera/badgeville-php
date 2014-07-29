@@ -24,16 +24,14 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
-
-use Badgeville\Client;
+namespace Badgeville\Player;
 
 /**
  * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class PlayerActivities 
+class Activities 
 {
     protected $parent;
     protected $data = [];

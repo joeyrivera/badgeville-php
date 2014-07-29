@@ -27,7 +27,7 @@
 namespace Badgeville;
 
 use Badgeville\Client;
-use Badgeville\PlayerActivities;
+use Badgeville\Player\Activities;
 
 /**
  * Description of Players
@@ -45,7 +45,6 @@ class Players
      */
     public function __construct($client, $id = null)
     {
-        
         if (!$client instanceof Client) {
             throw new \Exception("invalid client");
         }
@@ -74,6 +73,11 @@ class Players
         return $this->data[$key];
     }
     
+    public function __set($key, $value)
+    {
+        $this->data[$key] = $value;
+    }
+    
     public function findAll(array $params = [])
     {
         $uri = 'players';
@@ -93,17 +97,51 @@ class Players
     
     public function find($id, array $params = [])
     {
-        $response = $this->client->getRequest("players/{$id}");
+        $response = $this->client->getRequest("players/{$id}", $params);
         
         $player = clone $this;
         return $player->setData($response['players'][0]);
         
     }
     
+    public function create($params)
+    {
+        $response = $this->client->getRequest("players?do=create&data=" . json_encode($params));
+        
+        $player = clone $this;
+        $player->setData($response['players'][0]);
+        
+        return $player;
+    }
+    
+    public function save()
+    {
+        $allowedFields = ['name', 'display_name', 'first_name', 'last_name', 'image', 'admin', 'custom'];
+        $data = array_intersect_key($this->data, array_flip($allowedFields));
+        
+        // need to remove null values
+        $data = array_filter($data, function ($value) {
+            return is_null($value) ? false : true;
+        });
+        
+        $params = [
+            'do' => 'update',
+            'data' => json_encode($data, JSON_UNESCAPED_SLASHES)
+        ];
+        
+        $response = $this->client->getRequest("players/{$this->data['id']}", $params);
+        
+        $player = clone $this;
+        $player->setData($response['players'][0]);
+        
+        return $player;
+    }
+    
+    
     public function activities()
     {
         // make sure we have loaded this guys or have the id first
-        return new PlayerActivities($this);
+        return new Activities($this);
     }
     
     public function toArray()

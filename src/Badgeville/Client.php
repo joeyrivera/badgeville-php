@@ -55,8 +55,12 @@ class Client
     
     public function __call($name, array $params = [])
     {
+        if (!empty($params)) {
+            $params = $params[0];
+        }
+        
         $newName = __NAMESPACE__. '\\' . ucwords($name);
-        return new $newName($this, $params[0]);
+        return new $newName($this, $params);
     }
     
 //    public function info(array $params = [])
@@ -73,21 +77,15 @@ class Client
     {
         // make sure uri isn't absolute - remove first / if there
         
-        
-        if (!empty($params)) {
-            $uri .= '?' . http_build_query($params);
-        }
-
         try {
-            $request = $this->client->createRequest('GET', $uri);
-            $response = $this->client->send($request)->json(['object' => $this->config['responseAsObject']]);
+            $request = $this->client->createRequest('GET', $uri, ['query' => $params]);
+            $response = $this->client->send($request)->json();
 
             // check for error - can be multiple, which do we show?
-            if (!empty($response->errors)) {
-
+            if (!empty($response['errors'])) {
                 throw RequestException::create(
                     $request, 
-                    new Response($response->errors[0]->code, [], null, ['reason_phrase' => $response->errors[0]->messages[0]])
+                    new Response($response['errors'][0]['code'], [], null, ['reason_phrase' => $response['errors'][0]['messages'][0]])
                 );
             }
         } catch (RequestException $e) {
