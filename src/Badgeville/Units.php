@@ -24,66 +24,15 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Player;
+namespace Badgeville;
 
 /**
  * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Activities 
+class Units extends ResourceAbstract
 {
-    protected $parent;
-    protected $data = [];
     
-    /**
-     * take in client or config
-     * @param type $client
-     */
-    public function __construct($parent)
-    {
-        
-        $this->parent = $parent;
-        return $this;
-    }
-    
-    public function setData($data)
-    {
-        $this->data = $data;
-        
-        return $this;
-    }
-    
-    public function getData()
-    {
-        return $this->data;
-    }
-    
-    public function findAll(array $params = [])
-    {
-        $uri = "players/{$this->parent->id}/activities";
-         
-        $response = $this->parent->getClient()->getRequest($uri, $params);
-        
-        // convert to our stuff
-        $collection = [];
-        foreach ($response['activities'] as $activity) {
-            $newActivity = clone $this;
-            $newActivity->setData($activity);
-            $collection[] = $newActivity;
-        }
-        
-        return $collection;
-    }
-    
-    public function find($id)
-    {
-        
-    }
-    
-    public function toArray()
-    {
-        return $this->data;
-    }
     
 }

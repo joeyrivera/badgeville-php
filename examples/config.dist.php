@@ -28,5 +28,4 @@ return [
     'apiVersion' => 'v1',
     'apiKey' => '',
     'siteId' => '',
-    'responseAsObject' => true
 ];

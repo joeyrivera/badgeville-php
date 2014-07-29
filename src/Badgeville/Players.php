@@ -26,87 +26,16 @@
 
 namespace Badgeville;
 
-use Badgeville\Client;
-use Badgeville\Player\Activities;
-
 /**
  * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Players 
+class Players extends ResourceAbstract
 {
-    protected $client;
-    protected $data = [];
-    
-    /**
-     * take in client or config
-     * @param type $client
-     */
-    public function __construct($client, $id = null)
-    {
-        if (!$client instanceof Client) {
-            throw new \Exception("invalid client");
-        }
-        
-        $this->client = $client;
-        
-        $this->data['id'] = $id;
-        
-        return $this;
-    }
-    
-    public function setData($data)
-    {
-        $this->data = $data;
-        
-        return $this;
-    }
-    
-    public function getData()
-    {
-        return $this->data;
-    }
-    
-    public function __get($key)
-    {
-        return $this->data[$key];
-    }
-    
-    public function __set($key, $value)
-    {
-        $this->data[$key] = $value;
-    }
-    
-    public function findAll(array $params = [])
-    {
-        $uri = 'players';
-         
-        $response = $this->client->getRequest($uri, $params);
-        
-        // convert to our stuff
-        $collection = [];
-        foreach ($response['players'] as $player) {
-            $newPlayer = clone $this;
-            $newPlayer->setData($player);
-            $collection[] = $newPlayer;
-        }
-        
-        return $collection;
-    }
-    
-    public function find($id, array $params = [])
-    {
-        $response = $this->client->getRequest("players/{$id}", $params);
-        
-        $player = clone $this;
-        return $player->setData($response['players'][0]);
-        
-    }
-    
     public function create($params)
     {
-        $response = $this->client->getRequest("players?do=create&data=" . json_encode($params));
+        $response = $this->getClient()->getRequest("players?do=create&data=" . json_encode($params));
         
         $player = clone $this;
         $player->setData($response['players'][0]);
@@ -129,29 +58,12 @@ class Players
             'data' => json_encode($data, JSON_UNESCAPED_SLASHES)
         ];
         
-        $response = $this->client->getRequest("players/{$this->data['id']}", $params);
+        $response = $this->getClient()->getRequest("players/{$this->data['id']}", $params);
         
         $player = clone $this;
         $player->setData($response['players'][0]);
         
         return $player;
-    }
-    
-    
-    public function activities()
-    {
-        // make sure we have loaded this guys or have the id first
-        return new Activities($this);
-    }
-    
-    public function toArray()
-    {
-        return $this->data;
-    }
-    
-    public function getClient()
-    {
-        return $this->client;
     }
     
 }

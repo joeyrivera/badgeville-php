@@ -31,12 +31,12 @@ if (!is_file('config.php')) {
     throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
 
-use Badgeville\Client;
+use Badgeville\Site;
 
-$client = new Client(require_once 'config.php');
-//$player = $client->players()->find('53d7dd5d6173b1c1ca006c22');
-//$player = $client->players()->find('joeyrivera@air-watch.com', [
-$player = $client->players()->find('53d6530a88b616814400657c', [
+$site = new Site(require_once 'config.php');
+//$player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
+//$player = $site->players()->find('joeyrivera@air-watch.com', [
+$player = $site->players()->find('53d6530a88b616814400657c', [
     'includes' => 'rewards,positions,activities'
 ]);
 

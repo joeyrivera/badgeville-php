@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 Joey Rivera <joey1.rivera@gmail.com>.
@@ -24,22 +24,16 @@
  * THE SOFTWARE.
  */
 
-require_once '../vendor/autoload.php';
+namespace Badgeville\Players\Activities;
 
-// check for config file
-if (!is_file('config.php')) {
-    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
+use Badgeville\ResourceAbstract;
+
+/**
+ * Description of Players
+ *
+ * @author Joey Rivera <joey1.rivera@gmail.com>
+ */
+class Behaviors extends ResourceAbstract
+{
+    
 }
-
-use Badgeville\Site;
-
-$site = new Site(require_once 'config.php');
-
-$activities = $site->players('53d6530a88b616814400657c')->activities()->findAll();
-foreach ($activities as $activity) {
-    var_dump($activity->toArray());
-}
-
-
-
-

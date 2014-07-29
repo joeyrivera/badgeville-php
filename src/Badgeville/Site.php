@@ -26,11 +26,72 @@
 
 namespace Badgeville;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Message\Response;
+
 /**
- * Description of Site
+ * Description of Client
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Site {
-    //put your code here
+class Site 
+{
+    protected $client;
+    protected $config;
+    
+    public function __construct($config = [])
+    {
+        $this->config = $config;
+        $this->client = new GuzzleClient([
+            'base_url' => ["{$config['url']}/{version}/{key}/sites/{site}/", [
+                'version' => $config['apiVersion'],
+                'key' => $config['apiKey'],
+                'site' => $config['siteId']
+            ]]
+        ]);
+        
+    }
+    
+    public function __call($name, array $params = [])
+    {
+        if (!empty($params)) {
+            $params = $params[0];
+        }
+        
+        $newName = __NAMESPACE__. '\\' . ucwords($name);
+        $instance = new $newName($this, $params);
+        return $instance->setClient($this);
+    }
+    
+    public function getRequest($uri, $params = [])
+    {
+        // make sure uri isn't absolute - remove first / if there
+        
+        try {
+            $request = $this->client->createRequest('GET', $uri, ['query' => $params]);
+            $response = $this->client->send($request)->json();
+
+            // check for error - can be multiple, which do we show?
+            if (!empty($response['errors'])) {
+                throw RequestException::create(
+                    $request, 
+                    new Response($response['errors'][0]['code'], [], null, ['reason_phrase' => $response['errors'][0]['messages'][0]])
+                );
+            }
+        } catch (RequestException $e) {
+            echo $e->getRequest() . "\n";
+            if ($e->hasResponse()) {
+                echo $e->getResponse() . "\n";
+            }
+            exit;
+        }
+        
+        return $response;
+    }
+    
+    public function getClient()
+    {
+        return $this;
+    }
 }

@@ -35,11 +35,13 @@ use Badgeville\Site;
 
 $site = new Site(require_once 'config.php');
 
-$activities = $site->players('53d6530a88b616814400657c')->activities()->findAll();
-foreach ($activities as $activity) {
-    var_dump($activity->toArray());
+$behaviors = $site->players('53d6530a88b616814400657c')->activities('53d69a1c6173b187d20065a3')->behaviors()->findAll();
+foreach ($behaviors as $behavior) {
+    var_dump($behavior->toArray());
 }
 
+
+//players/53d6530a88b616814400657c/activities/53d69a1c6173b187d20065a3/behaviors
 
 
 
