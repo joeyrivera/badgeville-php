@@ -48,7 +48,7 @@ $dirArray = mapDir($path);
 if (!empty($_GET['class'])) {
     $class = strtolower(trim($_GET['class']));
     $includes = !empty($_GET['includes']) ? ['includes' => strtolower(trim($_GET['includes']))] : [];
-    
+
     unset($_GET['class']);
     unset($_GET['includes']);
     
@@ -255,5 +255,3 @@ function addInputs($parent, $child = [], $depth = 0)
         </div>
     </body>
 </html>
-
-

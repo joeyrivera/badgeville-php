@@ -43,10 +43,16 @@ class Players extends ResourceAbstract
         return $player;
     }
     
-    public function save()
+    public function save($obj = null)
     {
+        if ($obj instanceof $this) {
+            $objData = $obj->getData();
+        } else {
+            $objData = $this->data;
+        }
+        
         $allowedFields = ['name', 'display_name', 'first_name', 'last_name', 'image', 'admin', 'custom'];
-        $data = array_intersect_key($this->data, array_flip($allowedFields));
+        $data = array_intersect_key($objData, array_flip($allowedFields));
         
         // need to remove null values
         $data = array_filter($data, function ($value) {
@@ -58,7 +64,7 @@ class Players extends ResourceAbstract
             'data' => json_encode($data, JSON_UNESCAPED_SLASHES)
         ];
         
-        $response = $this->getClient()->getRequest("players/{$this->data['id']}", $params);
+        $response = $this->getClient()->getRequest("players/{$objData['id']}", $params);
         
         $player = clone $this;
         $player->setData($response['players'][0]);

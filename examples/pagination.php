@@ -34,12 +34,11 @@ if (!is_file('config.php')) {
 use Badgeville\Site;
 
 $site = new Site(require_once 'config.php');
-$player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
-var_dump($player->toArray());
+$players = $site->players()->findAll(['limit' => 1, 'with_count' => true]);
 
-$player->display_name = 'testing2';
-$player->save();
-//$site->players()->save($player);
+var_dump($players);
 
-$player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
-var_dump($player->toArray());
+foreach ($players as $player) {
+    var_dump($player->toArray());
+}
+
