@@ -1,7 +1,5 @@
-badgeville-php
+Badgeville Cairo SDK for PHP
 ==============
-
-PHP SDK for Badgeville Cairo REST API
 
 version 0.1
 
@@ -9,7 +7,8 @@ This ia a work in progress and lots of things will be changing still. Hopefully 
 won't take too long to get a beta ready. The idea is to provide a library that is 
 easy to use to interact with the Cairo API. All that's needed to get started is 
 
-Usage so far (will probably change until beta)
+#Usage 
+keep in mind functionality will probably change until beta
 
 To install via composer:
 ```composer
