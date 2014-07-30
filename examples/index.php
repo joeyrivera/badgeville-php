@@ -33,13 +33,15 @@ if (!is_file('config.php')) {
     throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
 
+// everything starts with a site, all other calls are related to the site
 $site = new Site(require_once 'config.php');
 
 $resources = [];
 $data = [];
 
-// get all root nodes and add links for all
 $path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Badgeville';
+
+// create map of directory structure to render the menu dynamically
 $dirArray = mapDir($path);
 
 // do we have anything to load?
@@ -75,21 +77,23 @@ if (!empty($_GET['class'])) {
     }
 
     try {
-            // ugle but quick
+        $includesString = !empty($includes) ? '["includes" => ["'.  str_replace(',', '","', $includes['includes']).'"]]' : '[]';
+        
+        // ugle but quick and we know there are only up to 3 layers
         switch(count($params)) {
             case 1:
-                $call = '$site->'.$class.'()->find('.$params[0]['id'].', $includes)->toArray()';
+                $call = '$site->'.$class.'()->find("'.$params[0]['id'].'", '.$includesString.')->toArray()';
                 $data = $site->$class()->find($params[0]['id'], $includes)->toArray();
                 break;
 
             case 2:
-                $call = '$site->'.$class.'('.$params[0]['id'].')->'.$params[1]['class'].'()->find('.$params[1]['id'].', $includes)->toArray()';
+                $call = '$site->'.$class.'("'.$params[0]['id'].'")->'.$params[1]['class'].'()->find("'.$params[1]['id'].'", '.$includesString.')->toArray()';
                 $data = $site->$class($params[0]['id'])->$params[1]['class']()->find($params[1]['id'], $includes)->toArray();
                 break;
 
             case 3:
-                $call = '$site->'.$class.'('.$params[0]['id'].')->'.$params[1]['class'].'('.$params[1]['id'].')'
-                    . '->'.$params[2]['class'].'()->find('.$params[2]['id'].', $includes)->toArray()';
+                $call = '$site->'.$class.'("'.$params[0]['id'].'")->'.$params[1]['class'].'("'.$params[1]['id'].'")'
+                    . '->'.$params[2]['class'].'()->find("'.$params[2]['id'].'", '.$includesString.')->toArray()';
                 $data = $site->$class($params[0]['id'])->$params[1]['class']($params[1]['id'])
                     ->$params[2]['class']()->find($params[2]['id'], $includes)->toArray();
                 break;
@@ -172,7 +176,7 @@ can also pass a comma delimited string for includes</p>
 <div>
     <h3>Results <?=!empty($class)? "for {$class}" : '';?></H3>
     <p>php code:</p>
-    <code><?=$call;?></code>
+    <code><?=isset($call) ? $call : '';?></code>
     
     <p>data array:</p>
     <pre><?=var_dump($data);?></pre>
