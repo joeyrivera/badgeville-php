@@ -64,6 +64,7 @@ if (!empty($_GET['class'])) {
         }
     }
     
+    // figure out based on params if we need to call find or findall
     if (count($params) == 0) {
         try {
             $call = '$site->'.$class.'()->findAll()';
@@ -76,22 +77,27 @@ if (!empty($_GET['class'])) {
         }
     }
 
+    // need to call find, figure out on which resource
     try {
+        // to display the php code in the screen
         $includesString = !empty($includes) ? '["includes" => ["'.  str_replace(',', '","', $includes['includes']).'"]]' : '[]';
         
         // ugle but quick and we know there are only up to 3 layers
         switch(count($params)) {
             case 1:
+                // to display the php code in the screen
                 $call = '$site->'.$class.'()->find("'.$params[0]['id'].'", '.$includesString.')->toArray()';
                 $data = $site->$class()->find($params[0]['id'], $includes)->toArray();
                 break;
 
             case 2:
+                // to display the php code in the screen
                 $call = '$site->'.$class.'("'.$params[0]['id'].'")->'.$params[1]['class'].'()->find("'.$params[1]['id'].'", '.$includesString.')->toArray()';
                 $data = $site->$class($params[0]['id'])->$params[1]['class']()->find($params[1]['id'], $includes)->toArray();
                 break;
 
             case 3:
+                // to display the php code in the screen
                 $call = '$site->'.$class.'("'.$params[0]['id'].'")->'.$params[1]['class'].'("'.$params[1]['id'].'")'
                     . '->'.$params[2]['class'].'()->find("'.$params[2]['id'].'", '.$includesString.')->toArray()';
                 $data = $site->$class($params[0]['id'])->$params[1]['class']($params[1]['id'])
@@ -104,11 +110,18 @@ if (!empty($_GET['class'])) {
     }
 }
 
+/**
+ * create a multi-dimensional view of the folder structure
+ * 
+ * @param string $path
+ * @return array
+ */
 function mapDir($path)
 {
     $data = [];
     $dir = dir($path);
     
+    // if file map, else call recursively
     while (false !== ($entry = $dir->read())) {
         if (is_file($path . DIRECTORY_SEPARATOR . $entry) && !isset($data[substr($entry, 0, -4)]) 
             && $entry != 'ResourceAbstract.php' && $entry != 'Site.php') {
@@ -121,7 +134,12 @@ function mapDir($path)
     return $data;
 }
 
-
+/**
+ * For each resource, create a form
+ * 
+ * @param array $resources
+ * @return string
+ */
 function drawForms($resources)
 {
     $html = '';
@@ -132,15 +150,27 @@ function drawForms($resources)
         $html .= "<input type='hidden' name='class' value='{$key}'>";
         $html .= "<input type='submit'>";
         $html .= "</form>";
-        $html .= "<hr />";
+        $html .= "<hr style='margin-bottom:40px;' />";
     }
 
     return $html;
 }
 
+/**
+ * Create all needed inputs for each resource based on hierarchy
+ * 
+ * @param string $parent
+ * @param array $child
+ * @param int $depth
+ * @return string
+ */
 function addInputs($parent, $child = [], $depth = 0)
 {
     $indent = $depth * 50;
+    
+    // the naming convension allows us to extract which methods to call later
+    // parent is the resource name and depth gives us an idea of which parent
+    // or child ids are required.
     $inputName = "id-{$parent}-{$depth}";
     $inputValue = !empty($_GET[$inputName]) ? $_GET[$inputName] : '';
     
@@ -150,11 +180,13 @@ function addInputs($parent, $child = [], $depth = 0)
             <input type='text' name='{$inputName}' value='{$inputValue}'></label>
         </p>
     ";
-    
+
+    // if no child then done
     if (count($child) == 0) {
         return $html;
     }
-            
+    
+    // call recursively until we have no more children
     foreach ($child as $key => $value) {
         $html .= addInputs($key, $value, $depth+1);
     } 
@@ -162,11 +194,46 @@ function addInputs($parent, $child = [], $depth = 0)
     return $html;
 }
 ?>
+<h3>Find/FindAll Utility</h3>
+<p>
+    This utility allows you to do find and find all calls to the library by interacting
+    with the forms. To find all, click on submit on the resource block you are interested 
+    in without filling out any input boxes.
+</p>
 
-<h3>Available Resources</h3>
-<p>click on the resource name to do a find all, else type in an id and click submit for find. You 
-can also pass a comma delimited string for includes</p>
-<div style="float:left;margin-right:20px"><?=drawForms($dirArray);?></div>
+<p>
+    To do a find, simply type the id into the corresponding input box and click submit. For 
+    example, if you want to find a player who's id is '123', type '123' next to the players 
+    input bot and hit submit.
+</p>
+
+<p>
+    Resources have a parent child relationship, to find a specific reward for a player, you 
+    first need to have the player id. In this scenario you can do a find all on players, find 
+    the id of the player you want and type that id in the players input box. Next type 'rewards' 
+    into the includes box, and click submit. This should return the player with his/her rewards. 
+    Now you can copy/paste the reward id from the results into the rewards input box under 
+    players and hit submit. You should see the individual reward listed in the results panel now.
+</p>
+
+<p>
+    The includes input box allows you to type a comman delimited string to bring back all those 
+    resources back with the call. You can view the Badgeville documentation to see which resource 
+    can include what child resources. For example, if you want a player of id '123' to come 
+    back with rewards, activities, and missions type '123' in the player input box, and in 
+    the includes box type 'rewards,activities,missions' then click submit. Your result should 
+    be the player with all those includes resources.
+</p>
+
+<p>Finally, each calll will display the php code needed to replicate to help the user understand 
+    how this library is used behind the scense. As long as you create a config.php file in the 
+    examples folder and add your api key and site id, you should be able to use this utility.
+</p>
+
+<div style="float:left;margin-right:20px">
+    <h3>Resources</h3>
+    <?=drawForms($dirArray);?>
+</div>
 
 <!--<div>
     <h3>Params:</h3>
@@ -174,7 +241,7 @@ can also pass a comma delimited string for includes</p>
 </div>-->
 
 <div>
-    <h3>Results <?=!empty($class)? "for {$class}" : '';?></H3>
+    <h3>Results <?=!empty($class)? "for {$class}" : '';?></h3>
     <p>php code:</p>
     <code><?=isset($call) ? $call : '';?></code>
     
