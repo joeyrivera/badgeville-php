@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 Joey Rivera <joey1.rivera@gmail.com>.
@@ -24,20 +24,16 @@
  * THE SOFTWARE.
  */
 
-require_once '../vendor/autoload.php';
+namespace Badgeville\Players\MissionHistories;
 
-// check for config file
-if (!is_file('config.php')) {
-    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
+use Badgeville\ResourceAbstract;
+
+/**
+ * Description of Players
+ *
+ * @author Joey Rivera <joey1.rivera@gmail.com>
+ */
+class Rewards extends ResourceAbstract
+{
+    
 }
-
-use Badgeville\Site;
-
-$site = new Site(require_once 'config.php');
-//$player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
-//$player = $site->players()->find('joeyrivera@air-watch.com', [
-$player = $site->players()->find('53d6530a88b616814400657c', [
-    'includes' => 'rewards,positions,activities'
-]);
-
-var_dump($player->toArray());

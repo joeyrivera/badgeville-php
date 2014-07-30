@@ -64,6 +64,7 @@ if (!empty($_GET['class'])) {
     
     if (count($params) == 0) {
         try {
+            $call = '$site->'.$class.'()->findAll()';
             $items = $site->$class()->findAll();
             foreach ($items as $item) {
                 $data[] = $item->toArray();
@@ -77,14 +78,18 @@ if (!empty($_GET['class'])) {
             // ugle but quick
         switch(count($params)) {
             case 1:
+                $call = '$site->'.$class.'()->find('.$params[0]['id'].', $includes)->toArray()';
                 $data = $site->$class()->find($params[0]['id'], $includes)->toArray();
                 break;
 
             case 2:
+                $call = '$site->'.$class.'('.$params[0]['id'].')->'.$params[1]['class'].'()->find('.$params[1]['id'].', $includes)->toArray()';
                 $data = $site->$class($params[0]['id'])->$params[1]['class']()->find($params[1]['id'], $includes)->toArray();
                 break;
 
             case 3:
+                $call = '$site->'.$class.'('.$params[0]['id'].')->'.$params[1]['class'].'('.$params[1]['id'].')'
+                    . '->'.$params[2]['class'].'()->find('.$params[2]['id'].', $includes)->toArray()';
                 $data = $site->$class($params[0]['id'])->$params[1]['class']($params[1]['id'])
                     ->$params[2]['class']()->find($params[2]['id'], $includes)->toArray();
                 break;
@@ -157,15 +162,19 @@ function addInputs($parent, $child = [], $depth = 0)
 <h3>Available Resources</h3>
 <p>click on the resource name to do a find all, else type in an id and click submit for find. You 
 can also pass a comma delimited string for includes</p>
-<div style="float:left"><?=drawForms($dirArray);?></div>
+<div style="float:left;margin-right:20px"><?=drawForms($dirArray);?></div>
 
-<div>
+<!--<div>
     <h3>Params:</h3>
     <?=var_dump($_GET);?>
-</div>
+</div>-->
 
 <div>
     <h3>Results <?=!empty($class)? "for {$class}" : '';?></H3>
-    <?=var_dump($data);?>
+    <p>php code:</p>
+    <code><?=$call;?></code>
+    
+    <p>data array:</p>
+    <pre><?=var_dump($data);?></pre>
 </div>
 
