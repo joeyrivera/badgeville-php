@@ -31,7 +31,8 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
 
 /**
- * Description of Client
+ * This is where everything starts. All calls needs to be made via the site
+ * instance. Each site instance is specific to a site id.
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
@@ -40,6 +41,11 @@ class Site
     protected $client;
     protected $config;
     
+    /**
+     * Creates guzzle instance
+     * 
+     * @param array $config
+     */
     public function __construct($config = [])
     {
         $this->config = $config;
@@ -53,6 +59,13 @@ class Site
         
     }
     
+    /**
+     * Instanciate a requested resource and inject it this site
+     * 
+     * @param string $name
+     * @param array $params
+     * @return \Badgeville\ResourceAbstract
+     */
     public function __call($name, array $params = [])
     {
         if (!empty($params)) {
@@ -61,9 +74,17 @@ class Site
         
         $newName = __NAMESPACE__. '\\' . ucwords($name);
         $instance = new $newName($this, $params);
-        return $instance->setClient($this);
+        return $instance->setSite($this);
     }
     
+    /**
+     * Handles all api calls
+     * 
+     * @param string $uri
+     * @param array $params
+     * @return array
+     * @throws \Exception
+     */
     public function getRequest($uri, $params = [])
     {
         // make sure uri isn't absolute - remove first / if there
@@ -72,7 +93,8 @@ class Site
             $request = $this->client->createRequest('GET', $uri, ['query' => $params]);
             $response = $this->client->send($request)->json();
 
-            // check for error - can be multiple, which do we show?
+            // cairo returns 200 even for errors so check response for error
+            // errors array can have multiple, which do we show? create one string for all?
             if (!empty($response['errors'])) {
                 throw RequestException::create(
                     $request, 
@@ -89,10 +111,5 @@ class Site
         }
         
         return $response;
-    }
-    
-    public function getClient()
-    {
-        return $this;
     }
 }

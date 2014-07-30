@@ -35,5 +35,6 @@ use Badgeville\ResourceAbstract;
  */
 class Activities extends ResourceAbstract
 {
+    
 
 }

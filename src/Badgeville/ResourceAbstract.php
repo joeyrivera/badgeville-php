@@ -27,33 +27,81 @@
 namespace Badgeville;
 
 /**
- * Description of ResourceAbstract
+ * All resources extend this class to gain the same functionality.
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
 abstract class ResourceAbstract 
 {
+    /**
+     * Track who's the parent owner of this resource
+     * @var \Badgeville\ResourceAbstract
+     */
     protected $parent;
-    protected $data = [];
-    protected $client;
     
+    /**
+     * Stores the properties for the resource
+     * 
+     * @var array 
+     */
+    protected $data = [];
+    
+    /**
+     * Track site owner for api calls
+     * 
+     * @var \Badgeville\Site
+     */
+    protected $site;
+    
+    /**
+     * Called from parent
+     * 
+     * @param \Badgeville\ResourceAbstract $parent
+     * @param string $id
+     * @return \Badgeville\ResourceAbstract
+     */
     public function __construct($parent, $id = null)
     {
         $this->parent = $parent;
+        
+        // magic setter
         $this->id = $id;
+        
         return $this;
     }
     
+    /**
+     * to load any resource properties
+     * 
+     * @param string $key
+     * @return mixed
+     */
     public function __get($key)
     {
         return $this->data[$key];
     }
     
+    /**
+     * to set any resource properties
+     * 
+     * @param string $key
+     * @param mixed $value
+     * @return \Badgeville\ResourceAbstract
+     */
     public function __set($key, $value)
     {
         $this->data[$key] = $value;
+        
+        return $this;
     }
     
+    /**
+     * To load children of this resource
+     * 
+     * @param string $name
+     * @param array $params
+     * @return \Badgeville\ResourceAbstract
+     */
     public function __call($name, array $params = [])
     {
         if (!empty($params)) {
@@ -62,31 +110,58 @@ abstract class ResourceAbstract
         
         $newName = get_called_class(). '\\' . ucwords($name);
         $instance = new $newName($this, $params);
-        return $instance->setClient($this->getClient());
+        return $instance->setSite($this->getSite());
     }
     
+    /**
+     * Find this resources' parent
+     * 
+     * @return \Badgeville\ResourceAbstract
+     */
     public function getParent()
     {
         return $this->parent;
     }
     
+    /**
+     * array representation of the resource properties
+     * 
+     * @return array
+     */
     public function toArray()
     {
         return $this->data;
     }
     
-    public function getClient()
+    /**
+     * Get site root of all parents
+     * 
+     * @return \Badgeville\Site
+     */
+    public function getSite()
     {
-        return $this->client;
+        return $this->site;
     }
     
-    public function setClient($client)
+    /**
+     * To inject site
+     * 
+     * @param \Badgeville\Site $site
+     * @return \Badgeville\ResourceAbstract
+     */
+    public function setSite($site)
     {
-        $this->client = $client;
+        $this->site = $site;
         
         return $this;
     }
     
+    /**
+     * Stores all resource properties in array
+     * 
+     * @param array $data
+     * @return \Badgeville\ResourceAbstract
+     */
     public function setData($data)
     {
         $this->data = $data;
@@ -94,26 +169,37 @@ abstract class ResourceAbstract
         return $this;
     }
     
-    public function getData()
-    {
-        return $this->data;
-    }
-    
+    /**
+     * Find a resource of this type by id
+     * 
+     * Finds out who the parents are, if any, and grabs their name and id
+     * to generate the uri
+     * 
+     * @param string $id
+     * @param array $params
+     * @return \Badgeville\ResourceAbstract
+     */
     public function find($id, array $params = [])
     {
         $uri = $this->uriBuilder(get_called_class()) . $id;
         $indexName = strtolower(substr(get_called_class(), strrpos(get_called_class(), '\\') + 1));
-        $response = $this->getClient()->getRequest($uri, $params);
+        $response = $this->getSite()->getRequest($uri, $params);
         
         $item = clone $this;
         return $item->setData($response[$indexName][0]);
     }
     
+    /**
+     * Find all resources of this type
+     * 
+     * @param array $params
+     * @return array
+     */
     public function findAll(array $params = [])
     {
         $uri = $this->uriBuilder(get_called_class());
         $indexName = strtolower(substr(get_called_class(), strrpos(get_called_class(), '\\') + 1));
-        $response = $this->getClient()->getRequest($uri, $params);
+        $response = $this->getSite()->getRequest($uri, $params);
         
         // convert to our stuff
         $collection = [];
@@ -124,6 +210,25 @@ abstract class ResourceAbstract
         }
         
         return $collection;
+    }
+    
+    /**
+     * Sends a create call to the api and returns an instance of this resource
+     * 
+     * @param array $params
+     * @return \Badgeville\ResourceAbstract
+     */
+    public function create($params)
+    {
+        $insanceName = get_called_class();
+        $uri = $this->uriBuilder($insanceName) . "?do=create&data=" . json_encode($params);
+        $response = $this->getSite()->getRequest($uri);
+        
+        $currentName = strtolower(substr($insanceName, strrpos($insanceName, '\\') + 1));
+        $item = clone $this;
+        $item->setData($response[$currentName][0]);
+        
+        return $item;
     }
     
     protected function uriBuilder($namespace)

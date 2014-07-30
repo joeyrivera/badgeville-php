@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* 
  * The MIT License
  *
  * Copyright 2014 Joey Rivera <joey1.rivera@gmail.com>.
@@ -24,42 +24,19 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+require_once '../vendor/autoload.php';
 
-/**
- * Description of Players
- *
- * @author Joey Rivera <joey1.rivera@gmail.com>
- */
-class Players extends ResourceAbstract
-{
-    public function save($obj = null)
-    {
-        if ($obj instanceof $this) {
-            $objData = $obj->toArray();
-        } else {
-            $objData = $this->data;
-        }
-        
-        $allowedFields = ['name', 'display_name', 'first_name', 'last_name', 'image', 'admin', 'custom'];
-        $data = array_intersect_key($objData, array_flip($allowedFields));
-        
-        // need to remove null values
-        $data = array_filter($data, function ($value) {
-            return is_null($value) ? false : true;
-        });
-        
-        $params = [
-            'do' => 'update',
-            'data' => json_encode($data, JSON_UNESCAPED_SLASHES)
-        ];
-        
-        $response = $this->getSite()->getRequest("players/{$objData['id']}", $params);
-        
-        $player = clone $this;
-        $player->setData($response['players'][0]);
-        
-        return $player;
-    }
-    
+// check for config file
+if (!is_file('config.php')) {
+    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
+
+use Badgeville\Site;
+
+$site = new Site(require_once 'config.php');
+
+$activity = $site->players('53d814c2d4ed0ec26b0069b5')->activities()->create([
+    'verb' => 'logged'
+]);
+
+var_dump($activity->toArray());

@@ -60,9 +60,18 @@ $player = $site->players()->create([
 
 $player->display_name = 'testing2';
 $player->save();
+
+$activity = $site->players('234lkj234lkj234lkj')->activities()->create([
+    'verb' => 'logged'
+]);
 ```
 
 ###Todos
 * collections
 * pagination
 * unittesting
+* metadata mapping?
+* pass in guzzle adapter?
+* monolog
+* decide on exceptions
+* need error handling, resources should indicate what they can do ex: create vs find
