@@ -19,7 +19,8 @@ To install via composer:
 }
 ```
 
-First need to create a site instance. You can get an example config file in examples/config.php.dist:
+First create a copy of examples/config.php.dist and save it as examples/config.php. Next 
+fill out the array so it looks similar to:
 
 ```php
 return [
@@ -30,12 +31,14 @@ return [
 ];
 ```
 
+Now we can create a site instance which is needed to make any other calls: 
+
 ```php
 use Badgeville\Site;
 $site = new Site(require_once 'config.php');
 ```
 
-Now you can make all site specific calls like:
+Example of site specific calls:
 
 ```php
 $player = $site->players()->find('joey@rivera.com');
