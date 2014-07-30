@@ -12,7 +12,7 @@ easy to use to interact with the Cairo API. All that's needed to get started is
 Usage so far (will probably change until beta)
 
 To install via composer:
-```
+```composer
 {
     "require": {
         "joeyrivera/badgeville-php": "dev-master"
