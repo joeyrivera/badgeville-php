@@ -1,4 +1,4 @@
-Badgeville Cairo SDK for PHP
+#Badgeville Cairo SDK for PHP
 ==============
 
 version 0.1
@@ -7,11 +7,11 @@ This ia a work in progress and lots of things will be changing still. Hopefully 
 won't take too long to get a beta ready. The idea is to provide a library that is 
 easy to use to interact with the Cairo API. All that's needed to get started is 
 
-#Usage 
+##Usage 
 keep in mind functionality will probably change until beta
 
 To install via composer:
-```composer
+```json
 {
     "require": {
         "joeyrivera/badgeville-php": "dev-master"
@@ -19,7 +19,16 @@ To install via composer:
 }
 ```
 
-First need to create a site instance. You can get an example config file in examples/config.dist.php:
+First need to create a site instance. You can get an example config file in examples/config.php.dist:
+
+```php
+return [
+    'url' => 'https://sandbox.badgeville.com/cairo',
+    'apiVersion' => 'v1',
+    'apiKey' => '234lkj23l4kj23l4l2j34lk23j4lk23l4', // get this from your badgeville dashboard
+    'siteId' => '23k4lj23kl4j23lkj4', // get this from your badgeville dashboard
+];
+```
 
 ```php
 use Badgeville\Site;

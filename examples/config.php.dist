@@ -26,6 +26,6 @@
 return [
     'url' => 'https://sandbox.badgeville.com/cairo',
     'apiVersion' => 'v1',
-    'apiKey' => '',
-    'siteId' => '',
+    'apiKey' => '', // get this from your badgeville dashboard
+    'siteId' => '', // get this from your badgeville dashboard
 ];
