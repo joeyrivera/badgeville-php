@@ -22,14 +22,14 @@ To install via composer:
 
 First need to create a site instance. You can get an example config file in examples/config.dist.php:
 
-```
+```php
 use Badgeville\Site;
 $site = new Site(require_once 'config.php');
 ```
 
 Now you can make all site specific calls like:
 
-```
+```php
 $player = $site->players()->find('joey@rivera.com');
 
 $player = $site->players()->find('234lkj234lkj234lkj', [
