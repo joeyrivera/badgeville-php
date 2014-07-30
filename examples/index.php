@@ -194,58 +194,66 @@ function addInputs($parent, $child = [], $depth = 0)
     return $html;
 }
 ?>
-<h3>Find/FindAll Utility</h3>
-<p>
-    This utility allows you to do find and find all calls to the library by interacting
-    with the forms. To find all, click on submit on the resource block you are interested 
-    in without filling out any input boxes.
-</p>
+<html>
+    <head>
+        
+    </head>
+    <body>
+        <h3>Find/FindAll Utility</h3>
+        <p>
+            This utility allows you to do find and find all calls to the library by interacting
+            with the forms. To find all, click on submit on the resource block you are interested 
+            in without filling out any input boxes.
+        </p>
 
-<p>
-    To do a find, simply type the id into the corresponding input box and click submit. For 
-    example, if you want to find a player who's id is '123', type '123' next to the players 
-    input bot and hit submit.
-</p>
+        <p>
+            To do a find, simply type the id into the corresponding input box and click submit. For 
+            example, if you want to find a player who's id is '123', type '123' next to the players 
+            input bot and hit submit.
+        </p>
 
-<p>
-    Resources have a parent child relationship, to find a specific reward for a player, you 
-    first need to have the player id. In this scenario you can do a find all on players, find 
-    the id of the player you want and type that id in the players input box. Next type 'rewards' 
-    into the includes box, and click submit. This should return the player with his/her rewards. 
-    Now you can copy/paste the reward id from the results into the rewards input box under 
-    players and hit submit. You should see the individual reward listed in the results panel now.
-</p>
+        <p>
+            Resources have a parent child relationship, to find a specific reward for a player, you 
+            first need to have the player id. In this scenario you can do a find all on players, find 
+            the id of the player you want and type that id in the players input box. Next type 'rewards' 
+            into the includes box, and click submit. This should return the player with his/her rewards. 
+            Now you can copy/paste the reward id from the results into the rewards input box under 
+            players and hit submit. You should see the individual reward listed in the results panel now.
+        </p>
 
-<p>
-    The includes input box allows you to type a comman delimited string to bring back all those 
-    resources back with the call. You can view the Badgeville documentation to see which resource 
-    can include what child resources. For example, if you want a player of id '123' to come 
-    back with rewards, activities, and missions type '123' in the player input box, and in 
-    the includes box type 'rewards,activities,missions' then click submit. Your result should 
-    be the player with all those includes resources.
-</p>
+        <p>
+            The includes input box allows you to type a comman delimited string to bring back all those 
+            resources back with the call. You can view the Badgeville documentation to see which resource 
+            can include what child resources. For example, if you want a player of id '123' to come 
+            back with rewards, activities, and missions type '123' in the player input box, and in 
+            the includes box type 'rewards,activities,missions' then click submit. Your result should 
+            be the player with all those includes resources.
+        </p>
 
-<p>Finally, each calll will display the php code needed to replicate to help the user understand 
-    how this library is used behind the scense. As long as you create a config.php file in the 
-    examples folder and add your api key and site id, you should be able to use this utility.
-</p>
+        <p>Finally, each calll will display the php code needed to replicate to help the user understand 
+            how this library is used behind the scense. As long as you create a config.php file in the 
+            examples folder and add your api key and site id, you should be able to use this utility.
+        </p>
 
-<div style="float:left;margin-right:20px">
-    <h3>Resources</h3>
-    <?=drawForms($dirArray);?>
-</div>
+        <div style="float:left;margin-right:20px">
+            <h3>Resources</h3>
+            <?=drawForms($dirArray);?>
+        </div>
 
-<!--<div>
-    <h3>Params:</h3>
-    <?=var_dump($_GET);?>
-</div>-->
+        <!--<div>
+            <h3>Params:</h3>
+            <?=var_dump($_GET);?>
+        </div>-->
 
-<div>
-    <h3>Results <?=!empty($class)? "for {$class}" : '';?></h3>
-    <p>php code:</p>
-    <code><?=isset($call) ? $call : '';?></code>
-    
-    <p>data array:</p>
-    <pre><?=var_dump($data);?></pre>
-</div>
+        <div>
+            <h3>Results <?=!empty($class)? "for {$class}" : '';?></h3>
+            <p>php code:</p>
+            <code><?=isset($call) ? $call : '';?></code>
+
+            <p>data array:</p>
+            <pre><?=var_dump($data);?></pre>
+        </div>
+    </body>
+</html>
+
 
