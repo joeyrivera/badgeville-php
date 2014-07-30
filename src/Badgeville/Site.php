@@ -80,11 +80,12 @@ class Site
                 );
             }
         } catch (RequestException $e) {
-            echo $e->getRequest() . "\n";
+            $message = $e->getRequest() . "\n";
             if ($e->hasResponse()) {
-                echo $e->getResponse() . "\n";
+                $message .= $e->getResponse() . "\n";
             }
-            exit;
+            
+            throw new \Exception($message);
         }
         
         return $response;

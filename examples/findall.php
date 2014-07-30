@@ -28,56 +28,144 @@ require_once '../vendor/autoload.php';
 
 use Badgeville\Site;
 
+// check for config file
+if (!is_file('config.php')) {
+    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
+}
+
+$site = new Site(require_once 'config.php');
+
 $resources = [];
 $data = [];
 
 // get all root nodes and add links for all
 $path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Badgeville';
-$dir = dir($path);
-while (false !== ($entry = $dir->read())) {
-    if (!is_file($path . DIRECTORY_SEPARATOR . $entry) || strpos($entry, 'Abstract') !== false || strpos($entry, 'Site') !== false) {
-        continue;
-    }
-    $resources[] = substr($entry, 0, -4);
-}
+$dirArray = mapDir($path);
 
 // do we have anything to load?
 if (!empty($_GET['class'])) {
     $class = strtolower(trim($_GET['class']));
-    $id = !empty($_GET['id']) ? trim($_GET['id']) : null;
     $includes = !empty($_GET['includes']) ? ['includes' => strtolower(trim($_GET['includes']))] : [];
     
-    // check for config file
-    if (!is_file('config.php')) {
-        throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
-    }
-
-    $site = new Site(require_once 'config.php');
-
-    if (!empty($id)) {
-        $data = $site->$class()->find($id, $includes)->toArray();
-    } else {
-        $items = $site->$class()->findAll();
-        foreach ($items as $item) {
-            $data[] = $item->toArray();
+    unset($_GET['class']);
+    unset($_GET['includes']);
+    
+    $params = [];
+    
+    // create an array of get params
+    foreach ($_GET as $key => $value) {
+        if (!empty($value)) {
+            $params[substr(trim($key), -1)] = [
+                'class' => substr(strtolower(trim($key)), 3, -2),
+                'id' => $value
+            ];
         }
     }
+    
+    if (count($params) == 0) {
+        try {
+            $items = $site->$class()->findAll();
+            foreach ($items as $item) {
+                $data[] = $item->toArray();
+            }
+        } catch (\Exception $e) {
+            $data = $e->getMessage();
+        }
+    }
+
+    try {
+            // ugle but quick
+        switch(count($params)) {
+            case 1:
+                $data = $site->$class()->find($params[0]['id'], $includes)->toArray();
+                break;
+
+            case 2:
+                $data = $site->$class($params[0]['id'])->$params[1]['class']()->find($params[1]['id'], $includes)->toArray();
+                break;
+
+            case 3:
+                $data = $site->$class($params[0]['id'])->$params[1]['class']($params[1]['id'])
+                    ->$params[2]['class']()->find($params[2]['id'], $includes)->toArray();
+                break;
+
+        }
+    } catch (\Exception $e) {
+        $data = $e->getMessage();
+    }
+}
+
+function mapDir($path)
+{
+    $data = [];
+    $dir = dir($path);
+    
+    while (false !== ($entry = $dir->read())) {
+        if (is_file($path . DIRECTORY_SEPARATOR . $entry) && !isset($data[substr($entry, 0, -4)]) 
+            && $entry != 'ResourceAbstract.php' && $entry != 'Site.php') {
+            $data[substr($entry, 0, -4)] = [];
+        } elseif (is_dir($path . DIRECTORY_SEPARATOR . $entry) && $entry != '.' && $entry != '..') {
+            $data[$entry] = mapDir($path . DIRECTORY_SEPARATOR . $entry);
+        }
+    }  
+    
+    return $data;
+}
+
+
+function drawForms($resources)
+{
+    $html = '';
+    foreach ($resources as $key => $value) {
+        $html .= "<form>";
+        $html .= addInputs($key, $value);
+        $html .= "<label>Includes: <input type='text' name='includes'></label>";
+        $html .= "<input type='hidden' name='class' value='{$key}'>";
+        $html .= "<input type='submit'>";
+        $html .= "</form>";
+        $html .= "<hr />";
+    }
+
+    return $html;
+}
+
+function addInputs($parent, $child = [], $depth = 0)
+{
+    $indent = $depth * 50;
+    $inputName = "id-{$parent}-{$depth}";
+    $inputValue = !empty($_GET[$inputName]) ? $_GET[$inputName] : '';
+    
+    $html = " 
+        <p style='margin-left:{$indent}px'>
+            <label>{$parent}<br />
+            <input type='text' name='{$inputName}' value='{$inputValue}'></label>
+        </p>
+    ";
+    
+    if (count($child) == 0) {
+        return $html;
+    }
+            
+    foreach ($child as $key => $value) {
+        $html .= addInputs($key, $value, $depth+1);
+    } 
+
+    return $html;
 }
 ?>
 
 <h3>Available Resources</h3>
 <p>click on the resource name to do a find all, else type in an id and click submit for find. You 
 can also pass a comma delimited string for includes</p>
-<?php foreach ($resources as $resource) :?>
-<form>
-    <a href="?class=<?=$resource?>"><?=$resource?></a> 
-    <label>Id</label><input type="text" name="id">
-    <label>Includes</label><input type="text" name="includes">
-    <input type="hidden" name="class" value="<?=$resource?>">
-    <input type="submit">
-</form>
-<?php endforeach; ?>
+<div style="float:left"><?=drawForms($dirArray);?></div>
 
-<h3>Results <?=!empty($class)? "for {$class}" : '';?></H3>
-<pre><?=var_dump($data);?>
-</pre>
+<div>
+    <h3>Params:</h3>
+    <?=var_dump($_GET);?>
+</div>
+
+<div>
+    <h3>Results <?=!empty($class)? "for {$class}" : '';?></H3>
+    <?=var_dump($data);?>
+</div>
+
