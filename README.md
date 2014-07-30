@@ -35,7 +35,7 @@ return [
 Now you can direct your brower to the examples folder and use the utility. 
 
 To start using the library you need create a site instance passing it the configuration 
-array as a constructor parameter. This instance if needed to make any other calls: 
+array as a constructor parameter. This instance is needed to make any other calls: 
 
 ```php
 use Badgeville\Site;
