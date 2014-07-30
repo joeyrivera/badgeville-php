@@ -5,7 +5,7 @@ version 0.1
 
 This ia a work in progress and lots of things will be changing still. Hopefully it 
 won't take too long to get a beta ready. The idea is to provide a library that is 
-easy to use to interact with the Cairo API. All that's needed to get started is 
+easy to use to interact with the Cairo API. 
 
 ##Usage 
 keep in mind functionality will probably change until beta
@@ -19,7 +19,8 @@ To install via composer:
 }
 ```
 
-First create a copy of examples/config.php.dist and save it as examples/config.php. Next 
+The best way to get started is to test the find/findall utility under examples/index.php 
+To use, create a copy of examples/config.php.dist and save it as examples/config.php. Next 
 fill out the array so it looks similar to:
 
 ```php
@@ -31,7 +32,9 @@ return [
 ];
 ```
 
-Now we can create a site instance which is needed to make any other calls: 
+Now you can direct your brower to the examples folder and use the utility. To start 
+using the library you need the configure array in your project and then you can 
+create a site instance which is needed to make any other calls: 
 
 ```php
 use Badgeville\Site;
@@ -58,7 +61,7 @@ $player->display_name = 'testing2';
 $player->save();
 ```
 
-###Tods
+###Todos
 * collections
 * pagination
 * unittesting
