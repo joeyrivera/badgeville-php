@@ -1,7 +1,7 @@
 {
     "name": "joeyrivera/badgeville-php",
     "description": "Badgeville Cairo SDK for PHP",
-    "keywords": ["badgeville", "sdk"],
+    "keywords": ["badgeville", "sdk", "php", "cairo"],
     "type": "library",
     "homepage": "https://github.com/joeyrivera/badgeville-php",
     "license": "MIT",
@@ -13,8 +13,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "guzzlehttp/guzzle": "4.*",
-        "phpunit/phpunit": "4.*"
+        "guzzlehttp/guzzle": "4.*"
     },
     "require-dev": {
     

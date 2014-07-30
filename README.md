@@ -58,6 +58,7 @@ $player->display_name = 'testing2';
 $player->save();
 ```
 
-@todos
-collections
-pagination
+###Tods
+* collections
+* pagination
+* unittesting
