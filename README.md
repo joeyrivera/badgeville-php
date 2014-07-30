@@ -19,7 +19,7 @@ To install via composer:
 }
 ```
 
-The best way to get started is to test the find/findall utility under examples/index.php 
+The best way to get started is to test the find/findall utility under examples/index.php. 
 To use, create a copy of examples/config.php.dist and save it as examples/config.php. Next 
 fill out the array so it looks similar to:
 
@@ -32,9 +32,10 @@ return [
 ];
 ```
 
-Now you can direct your brower to the examples folder and use the utility. To start 
-using the library you need the configure array in your project and then you can 
-create a site instance which is needed to make any other calls: 
+Now you can direct your brower to the examples folder and use the utility. 
+
+To start using the library you need create a site instance passing it the configuration 
+array as a constructor parameter. This instance if needed to make any other calls: 
 
 ```php
 use Badgeville\Site;
