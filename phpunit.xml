@@ -1,0 +1,20 @@
+<phpunit bootstrap="tests/bootstrap.php" stopOnError="true" stopOnFailure="true">
+    <testsuites>
+        <testsuite name="Badgeville">
+            <directory>./tests</directory>
+        </testsuite>
+    </testsuites>
+  
+    <logging>
+<!--        <log type="coverage-html" target="report" charset="UTF-8" highlight="true" lowUpperBound="70" highLowerBound="90"/>-->
+    </logging>
+    
+    <filter>
+        <whitelist>
+            <directory>./src/Badgeville</directory>
+            <exclude>
+<!--                <directory></directory>-->
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

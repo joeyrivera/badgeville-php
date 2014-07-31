@@ -26,6 +26,9 @@
 
 namespace Badgeville;
 
+use Exception;
+use InvalidArgumentException;
+use BadMethodCallException;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
@@ -38,7 +41,18 @@ use GuzzleHttp\Message\Response;
  */
 class Site 
 {
+    /**
+     * Track the guzzle client for api calls
+     * 
+     * @var \GuzzleHttp\Client
+     */
     protected $client;
+    
+    /**
+     * configuration information passed to site
+     * 
+     * @var array
+     */
     protected $config;
     
     /**
@@ -46,17 +60,38 @@ class Site
      * 
      * @param array $config
      */
-    public function __construct($config = [])
+    public function __construct(array $params)
     {
-        $this->config = $config;
-        $this->client = new GuzzleClient([
-            'base_url' => ["{$config['url']}/{version}/{key}/sites/{site}/", [
-                'version' => $config['apiVersion'],
-                'key' => $config['apiKey'],
-                'site' => $config['siteId']
-            ]]
-        ]);
+        $requiredParams = ['url', 'apiVersion', 'apiKey', 'siteId'];
         
+        // validate params
+        foreach ($requiredParams as $requiredParam) {
+            if (!array_key_exists($requiredParam, $params)) {
+                throw new Exception("Missing required parameter {$requiredParam} in construct.");
+            }
+            
+            if (!is_string($params[$requiredParam]) || empty($params[$requiredParam])) {
+                throw new InvalidArgumentException("Invalid required parameter {$requiredParam} value {$params[$requiredParam]} in construct.");
+            }
+        }
+        
+        $config = [
+            'base_url' => [
+                "{$params['url']}/{version}/{key}/sites/{site}/", [
+                    'version' => $params['apiVersion'],
+                    'key' => $params['apiKey'],
+                    'site' => $params['siteId']
+                ]
+            ]
+        ];
+            
+        // check for adapter
+        if (!empty($params['adapter'])) {
+            $config['adapter'] = $params['adapter'];
+        }    
+        
+        $this->config = $params;
+        $this->client = new GuzzleClient($config);
     }
     
     /**
@@ -72,9 +107,32 @@ class Site
             $params = $params[0];
         }
         
+        // figure out namespace to load
         $newName = __NAMESPACE__. '\\' . ucwords($name);
+        
+        // figure out file path to check
+        $filePath = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $newName, $count) . ".php";
+        
+        // does file exist?
+        if (!realpath($filePath)) {
+            throw new BadMethodCallException("Unable to find called resource {$name}.");
+        }
+        
+        // instantiat
         $instance = new $newName($this, $params);
+        
+        // always inject site into resource
         return $instance->setSite($this);
+    }
+    
+    /**
+     * Allow access to client, never known when someone might want direct access
+     * 
+     * @return \GuzzleHttp\Client
+     */
+    public function getClient()
+    {
+        return $this->client;
     }
     
     /**
@@ -85,9 +143,17 @@ class Site
      * @return array
      * @throws \Exception
      */
-    public function getRequest($uri, $params = [])
+    public function getRequest($uri, array $params = [])
     {
+        // validate uri
+        if (!is_string($uri)) {
+            throw new InvalidArgumentException("Invalid uri {$uri} submitted.");
+        }
+        
         // make sure uri isn't absolute - remove first / if there
+        if ($uri[0] == '/') {
+            $uri = substr($uri, 1);
+        }
         
         try {
             $request = $this->client->createRequest('GET', $uri, ['query' => $params]);
@@ -107,7 +173,7 @@ class Site
                 $message .= $e->getResponse() . "\n";
             }
             
-            throw new \Exception($message);
+            throw new Exception($message);
         }
         
         return $response;
