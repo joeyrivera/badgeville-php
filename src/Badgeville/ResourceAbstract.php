@@ -231,11 +231,18 @@ abstract class ResourceAbstract
         return $item;
     }
     
+    /**
+     * Builds the uri that will be appended to the end of the default client url
+     * 
+     * @param string $namespace
+     * @return string
+     */
     protected function uriBuilder($namespace)
     {
+        // extract resource names from namespace and create url paths including id's
         $parts = explode('\\', $namespace);
 
-        // remove first part
+        // remove first part (Badgeville)
         array_shift($parts);
 
         $uri = '';
@@ -250,6 +257,12 @@ abstract class ResourceAbstract
         return $uri;
     }
     
+    /**
+     * Travel back through parents for this resource until we find it's id
+     * 
+     * @param string $parentName
+     * @return int|boolean
+     */
     protected function getIdOfParent($parentName)
     {
         $instance = $this;
@@ -257,8 +270,10 @@ abstract class ResourceAbstract
             $instance = $instance->getParent();
             $insanceName = get_class($instance);
             
+            // look at the end of the string for a match
             $currentName = substr($insanceName, -abs(strlen($parentName)));
             
+            // if we found a match return id else loop through again
             if ($currentName == $parentName) {
                 return $instance->id;
             }
