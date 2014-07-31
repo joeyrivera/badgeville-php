@@ -26,12 +26,14 @@
 
 namespace Badgeville;
 
+use InvalidArgumentException;
+
 /**
  * All resources extend this class to gain the same functionality.
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-abstract class ResourceAbstract 
+abstract class ResourceAbstract implements ResourceInterface
 {
     /**
      * Track who's the parent owner of this resource
@@ -56,15 +58,18 @@ abstract class ResourceAbstract
     /**
      * Called from parent
      * 
-     * @param \Badgeville\ResourceAbstract $parent
+     * @param \Badgeville\ResourceInterface $parent
      * @param string $id
      * @return \Badgeville\ResourceAbstract
      */
-    public function __construct($parent, $id = null)
+    public function __construct(ResourceInterface $parent, $id = null)
     {
         $this->parent = $parent;
         
-        // magic setter
+        if (!is_null($id) && !is_scalar($id)) {
+            throw new InvalidArgumentException("Invalid id passed.");
+        }
+        
         $this->id = $id;
         
         return $this;
@@ -104,12 +109,13 @@ abstract class ResourceAbstract
      */
     public function __call($name, array $params = [])
     {
+        $id = null;
         if (!empty($params)) {
-            $params = $params[0];
+            $id = $params[0];
         }
         
         $newName = get_called_class(). '\\' . ucwords($name);
-        $instance = new $newName($this, $params);
+        $instance = new $newName($this, $id);
         return $instance->setSite($this->getSite());
     }
     
@@ -140,6 +146,9 @@ abstract class ResourceAbstract
      */
     public function getSite()
     {
+        if ($this->parent instanceof Site) {
+            return $this->parent;
+        }
         return $this->site;
     }
     

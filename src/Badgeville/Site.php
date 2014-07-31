@@ -39,7 +39,7 @@ use GuzzleHttp\Message\Response;
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Site 
+class Site implements ResourceInterface
 {
     /**
      * Track the guzzle client for api calls
@@ -103,8 +103,9 @@ class Site
      */
     public function __call($name, array $params = [])
     {
+        $id = null;
         if (!empty($params)) {
-            $params = $params[0];
+            $id = $params[0];
         }
         
         // figure out namespace to load
@@ -118,11 +119,8 @@ class Site
             throw new BadMethodCallException("Unable to find called resource {$name}.");
         }
         
-        // instantiat
-        $instance = new $newName($this, $params);
-        
         // always inject site into resource
-        return $instance->setSite($this);
+        return new $newName($this, $id);
     }
     
     /**

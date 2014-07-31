@@ -32,34 +32,14 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 
 /**
- * Description of Site
+ * Tests for Site
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class SiteTest extends \PHPUnit_Framework_TestCase 
+class SiteTest extends AbstractClass
 {
     private $playersJson = '{"players":[{"id":"53d7dd7ec3fcd8c990006c28","name":"Joey Rivera","display_name":null,"first_name":null,"last_name":null,"image":"https://sandbox.badgeville.com/images/misc/missing/bar/user_nopicture.png","units":{"points":{"id":null,"display_name":"Points","name":"points","abbreviation":"pts","type":"points","order":null,"all":0.0,"year":0.0,"month":0.0,"week":0.0,"day":0.0}}}],"_context_info":{"offset":0,"limit":1}}';
     private $errorJson = '{"errors":[{"code":404,"status":"Not Found","messages":["Invalid route."]}]}';
-    /**
-     * reusable site
-     * 
-     * @return \Badgeville\Site
-     */
-    private function getValidSite($mockAdapter = null)
-    {
-        $config = [
-            'url' => 'http://www.joeyrivera.com',
-            'apiVersion' => 'v1',
-            'apiKey' => '123asdf1234asdf',
-            'siteId' => '123asdf'
-        ];
-        
-        if (!is_null($mockAdapter)) {
-            $config['adapter'] = $mockAdapter;
-        }
-        
-        return new \Badgeville\Site($config);
-    }
     
     /**
      * @expectedException \Exception
