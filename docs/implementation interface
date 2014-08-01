@@ -1,5 +1,5 @@
 First instantiate client
-    $site = new Site();
+    $site = new Site($siteId);
     $site->setClient(new Client($config));
 
 Now we can go through all objects with chaining if needed

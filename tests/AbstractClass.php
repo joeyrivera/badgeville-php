@@ -51,6 +51,7 @@ abstract class AbstractClass extends \PHPUnit_Framework_TestCase
             $config['adapter'] = $mockAdapter;
         }
         
-        return new \Badgeville\Sites($config);
+        $site = new \Badgeville\Sites($config['siteId']);
+        return $site->setClient(new \GuzzleHttp\Client($config));
     }
 }

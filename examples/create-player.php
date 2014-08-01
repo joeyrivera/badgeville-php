@@ -24,20 +24,11 @@
  * THE SOFTWARE.
  */
 
-require_once '../vendor/autoload.php';
-
-// check for config file
-if (!is_file('config.php')) {
-    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
-}
-
-use Badgeville\Sites;
-
-$site = new Sites(require_once 'config.php');
+require_once 'config.php';
 
 $player = $site->players()->create([
-    'name' => 'Joey Tester3',
-    'email' => 'joeyrivera@air-watch.com3'
+    'name' => 'Joey Tester6',
+    'email' => 'joeyrivera@air-watch.com6'
 ]);
 
 var_dump($player->toArray());

@@ -21,10 +21,10 @@ To install via composer:
 
 The best way to get started is to test the find/findall utility under examples/index.php. 
 To use, create a copy of examples/config.php.dist and save it as examples/config.php. Next 
-fill out the array so it looks similar to:
+update the params array with your info so it looks like:
 
 ```php
-return [
+$params = [
     'url' => 'https://sandbox.badgeville.com/cairo',
     'apiVersion' => 'v1',
     'apiKey' => '234lkj23l4kj23l4l2j34lk23j4lk23l4', // get this from your badgeville dashboard
@@ -34,12 +34,13 @@ return [
 
 Now you can direct your brower to the examples folder and use the utility. 
 
-To start using the library you need create a site instance passing it the configuration 
-array as a constructor parameter. This instance is needed to make any other calls: 
+To start using the library you need create a site instance passing it the site id 
+and setting the client to a GuzzleHttp\Client instance.
 
 ```php
 use Badgeville\Site;
-$site = new Site(require_once 'config.php');
+$site = new Site($siteId);
+$site->setClient(new GuzzleHttp\Client($params));
 ```
 
 Example of site specific calls:
@@ -76,10 +77,5 @@ $activity = $site->players('234lkj234lkj234lkj')->activities()->create([
 * decide on exceptions
 * need error handling, resources should indicate what they can do ex: create vs find
 
-
-change 
-    so all singular
-    site works just like all other resources (active record)
-    passing in an id to any resource defines it's id, find will load it
-    track url name in property for each resource
-    change default url to start at api key not at site, each resource will add that include site
+considering the following changes 
+* so all classes are singular named

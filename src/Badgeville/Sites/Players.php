@@ -63,7 +63,8 @@ class Players extends ResourceAbstract
             'data' => json_encode($data, JSON_UNESCAPED_SLASHES)
         ];
         
-        $response = $this->getSite()->getRequest("players/{$objData['id']}", $params);
+        $uri = $this->uriBuilder() . '/' . $this->id;
+        $response = $this->getSite()->getRequest($uri, $params);
         
         $player = clone $this;
         $player->setData($response['players'][0]);

@@ -29,7 +29,7 @@ namespace Badgeville;
 use Exception;
 use InvalidArgumentException;
 use BadMethodCallException;
-use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;
 
@@ -65,7 +65,7 @@ class Sites extends ResourceAbstract
         return $this->client;
     }
     
-    public function setClient($client)
+    public function setClient(Client $client)
     {
         $this->client = $client;
         

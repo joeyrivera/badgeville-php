@@ -24,20 +24,12 @@
  * THE SOFTWARE.
  */
 
-require_once '../vendor/autoload.php';
+require_once 'config.php';
 
-// check for config file
-if (!is_file('config.php')) {
-    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
-}
-
-use Badgeville\Sites;
-
-$site = new Sites(require_once 'config.php');
 $player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
 var_dump($player->toArray());
 
-$player->display_name = 'testing2';
+$player->display_name = 'testing3';
 $player->save();
 //$site->players()->save($player);
 

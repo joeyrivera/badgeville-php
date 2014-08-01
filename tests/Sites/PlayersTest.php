@@ -24,8 +24,9 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Test;
+namespace Badgeville\Test\Sites;
 
+use Badgeville\Test\AbstractClass;
 use GuzzleHttp\Adapter\MockAdapter;
 use GuzzleHttp\Adapter\TransactionInterface;
 use GuzzleHttp\Message\Response;
@@ -38,13 +39,12 @@ use GuzzleHttp\Stream\Stream;
  */
 class PlayersTest extends AbstractClass
 {
-    
     /**
      * @expectedException \Exception
      */
-    public function testConstructExceptionNoParent()
+    public function testConstructExceptionInvalidId()
     {
-        new \Badgeville\Players();
+        new \Badgeville\Sites\Players([]);
     }
     
     /**
@@ -52,26 +52,11 @@ class PlayersTest extends AbstractClass
      */
     public function testConstructExceptionInvalidParent()
     {
-        new \Badgeville\Players('asdf');
+        new \Badgeville\Sites\Players('34', []);
     }
-    
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testConstructExceptionInvalidId()
-    {
-        new \Badgeville\Players($this->getValidSite(), []);
-    }
-    
-    
-    
-//    public function testConstruct()
-//    {
-//        $site = $this->getValidSite();
-//        $this->assertInstanceOf('\Badgeville\Site', $site);
-//        
-//        $client = $site->getClient();
-//        $this->assertInstanceOf('\GuzzleHttp\Client', $client);
-//    }
 
+    public function testConstruct()
+    {
+        $this->assertInstanceOf('\Badgeville\Sites\Players', new \Badgeville\Sites\Players());
+    }
 }

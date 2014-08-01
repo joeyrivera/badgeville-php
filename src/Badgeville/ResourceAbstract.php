@@ -27,6 +27,7 @@
 namespace Badgeville;
 
 use InvalidArgumentException;
+use BadMethodCallException;
 
 /**
  * All resources extend this class to gain the same functionality.
@@ -47,6 +48,8 @@ abstract class ResourceAbstract implements ResourceInterface
      * @var array 
      */
     protected $data = [];
+    
+    abstract public function getResourceName();
     
     /**
      * Called from parent
@@ -111,6 +114,12 @@ abstract class ResourceAbstract implements ResourceInterface
         // does file exist?
         if (!realpath($filePath)) {
             throw new BadMethodCallException("Unable to find called resource {$newName}.");
+        }
+        
+        // make sure parent (this) has id else can't create
+        if (!$this->id) {
+            $name = get_called_class();
+            throw new BadMethodCallException("Parent {$name} must have an id specified to create child {$namespace}.");
         }
         
         $id = null;
@@ -256,30 +265,4 @@ abstract class ResourceAbstract implements ResourceInterface
         
         return implode('/', array_reverse($parts));
     }
-    
-    /**
-     * Travel back through parents for this resource until we find it's id
-     * 
-     * @param string $parentName
-     * @return int|boolean
-     */
-    protected function getIdOfParent($parentName)
-    {
-        $instance = $this;
-        while (null !== $instance = $instance->getParent()) {
-            $insanceName = get_class($instance);
-            
-            // look at the end of the string for a match
-            $currentName = substr($insanceName, -abs(strlen($parentName)));
-            
-            // if we found a match return id else loop through again
-            if ($currentName == $parentName) {
-                return $instance->id;
-            }
-        } 
-        
-        return false;
-    }
-    
-    abstract public function getResourceName();    
 }
