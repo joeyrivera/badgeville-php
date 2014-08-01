@@ -36,10 +36,22 @@ use GuzzleHttp\Stream\Stream;
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class SitesTest extends AbstractClass
+class SitesTest extends TestAbstract
 {
+    protected $namespace = '\Badgeville\Cairo\Sites';
+    protected $resourceName = 'sites';
+    
     private $playersJson = '{"players":[{"id":"53d7dd7ec3fcd8c990006c28","name":"Joey Rivera","display_name":null,"first_name":null,"last_name":null,"image":"https://sandbox.badgeville.com/images/misc/missing/bar/user_nopicture.png","units":{"points":{"id":null,"display_name":"Points","name":"points","abbreviation":"pts","type":"points","order":null,"all":0.0,"year":0.0,"month":0.0,"week":0.0,"day":0.0}}}],"_context_info":{"offset":0,"limit":1}}';
     private $errorJson = '{"errors":[{"code":404,"status":"Not Found","messages":["Invalid route."]}]}';
+    
+    /**
+     * Need to override this method from abstract since site is the only one that 
+     * can be instantiated directly
+     */
+    public function testConstructExceptionNotDirectly()
+    {
+        $this->assertInstanceOf('\Badgeville\Cairo\Sites', new $this->namespace());
+    }
     
     /**
      * @expectedException \Exception

@@ -40,7 +40,8 @@ abstract class ResourceAbstract implements ResourceInterface
 {
     /**
      * Track who's the parent owner of this resource
-     * @var \Badgeville\ResourceAbstract
+     * 
+     * @var \Badgeville\Cairo\ResourceInterface
      */
     protected $parent = null;
     
@@ -51,17 +52,25 @@ abstract class ResourceAbstract implements ResourceInterface
      */
     protected $data = [];
     
+    /**
+     * Make sure all Resources define this as we use it to render the urls
+     */
     abstract public function getResourceName();
     
     /**
-     * Called from parent
+     * Create a resource. All resources except for site must have a parent
      * 
-     * @param \Badgeville\ResourceInterface $parent
+     * @todo only allow for site or if called by a ResourceInterface
      * @param string $id
-     * @return \Badgeville\ResourceAbstract
+     * @param \Badgeville\Cairo\ResourceInterface $parent
+     * @return \Badgeville\Cairo\ResourceInterface
      */
     public function __construct($id = null, ResourceInterface $parent = null)
     {
+        if (get_called_class() != 'Badgeville\Cairo\Sites' && is_null($parent)) {
+            throw new InvalidArgumentException("Unable to call constructor directly");
+        }
+        
         if (!is_null($id) && !is_scalar($id)) {
             throw new InvalidArgumentException("Invalid id passed.");
         }
@@ -80,6 +89,10 @@ abstract class ResourceAbstract implements ResourceInterface
      */
     public function __get($key)
     {
+        if (!array_key_exists($key, $this->data)) {
+            return null;
+        }
+        
         return $this->data[$key];
     }
     
@@ -88,7 +101,7 @@ abstract class ResourceAbstract implements ResourceInterface
      * 
      * @param string $key
      * @param mixed $value
-     * @return \Badgeville\ResourceAbstract
+     * @return \Badgeville\Cairo\ResourceInterface
      */
     public function __set($key, $value)
     {
@@ -102,7 +115,7 @@ abstract class ResourceAbstract implements ResourceInterface
      * 
      * @param string $name
      * @param array $params
-     * @return \Badgeville\ResourceAbstract
+     * @return \Badgeville\Cairo\ResourceInterface
      */
     public function __call($name, array $params = [])
     {
@@ -124,10 +137,8 @@ abstract class ResourceAbstract implements ResourceInterface
             throw new BadMethodCallException("Parent {$name} must have an id specified to create child {$namespace}.");
         }
         
-        $id = null;
-        if (!empty($params)) {
-            $id = $params[0];
-        }
+        // is there an id to set?
+        $id = !empty($params) ? $params[0] : null;
         
         // always inject site into resource
         return new $namespace($id, $this);
@@ -136,7 +147,7 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Find this resources' parent
      * 
-     * @return \Badgeville\ResourceAbstract
+     * @return \Badgeville\Cairo\ResourceInterface
      */
     public function getParent()
     {
@@ -172,7 +183,7 @@ abstract class ResourceAbstract implements ResourceInterface
      * Stores all resource properties in array
      * 
      * @param array $data
-     * @return \Badgeville\ResourceAbstract
+     * @return \Badgeville\Cairo\ResourceInterface
      */
     public function setData($data)
     {
@@ -185,11 +196,12 @@ abstract class ResourceAbstract implements ResourceInterface
      * Find a resource of this type by id
      * 
      * Finds out who the parents are, if any, and grabs their name and id
-     * to generate the uri
+     * to generate the uri. If an id is not passed, it'll check to see if it's 
+     * already been defined and use it.
      * 
      * @param string $id
      * @param array $params
-     * @return \Badgeville\ResourceAbstract
+     * @return \Badgeville\Cairo\ResourceInterface
      */
     public function find($id = null, array $params = [])
     {
@@ -199,7 +211,7 @@ abstract class ResourceAbstract implements ResourceInterface
         } elseif ($this->id) {
             $uri = $this->uriBuilder() . '/' . $this->id;
         } else {
-            //error
+            throw new InvalidArgumentException("An id is required to call find.");
         }
         
         $response = $this->getSite()->getRequest($uri, $params);
@@ -247,7 +259,7 @@ abstract class ResourceAbstract implements ResourceInterface
      * Sends a create call to the api and returns an instance of this resource
      * 
      * @param array $params
-     * @return \Badgeville\ResourceAbstract
+     * @return \Badgeville\Cairo\ResourceInterface
      */
     public function create($params)
     {
@@ -264,6 +276,9 @@ abstract class ResourceAbstract implements ResourceInterface
     
     /**
      * Builds the uri that will be appended to the end of the default client url
+     * 
+     * Travels up the chain of parents to build the uri with their resource name 
+     * and id.
      * 
      * @param string $namespace
      * @return string

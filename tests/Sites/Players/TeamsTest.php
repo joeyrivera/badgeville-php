@@ -24,34 +24,17 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Test;
+namespace Badgeville\Test\Sites\Players;
+
+use Badgeville\Test\TestAbstract;
 
 /**
- * Description of Abstract
+ * Tests for Teams
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-abstract class AbstractClass extends \PHPUnit_Framework_TestCase 
+class TeamsTest extends TestAbstract
 {
-    /**
-     * reusable site
-     * 
-     * @return \Badgeville\Site
-     */
-    protected function getValidSite($mockAdapter = null)
-    {
-        $config = [
-            'url' => 'http://www.joeyrivera.com',
-            'apiVersion' => 'v1',
-            'apiKey' => '123asdf1234asdf',
-            'siteId' => '123asdf'
-        ];
-        
-        if (!is_null($mockAdapter)) {
-            $config['adapter'] = $mockAdapter;
-        }
-        
-        $site = new \Badgeville\Cairo\Sites($config['siteId']);
-        return $site->setClient(new \GuzzleHttp\Client($config));
-    }
+    protected $namespace = '\Badgeville\Cairo\Sites\Players\Teams';
+    protected $resourceName = 'teams';
 }

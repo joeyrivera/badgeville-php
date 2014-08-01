@@ -46,6 +46,8 @@ class Collection extends ArrayIterator
     /**
      * Creat a collection instance
      * 
+     * The pagination part is not required but comes in handy.
+     * 
      * @param array $data
      * @param int $offset
      * @param int $limit

@@ -24,17 +24,17 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Test\Sites;
+namespace Badgeville\Test\Sites\Players;
 
 use Badgeville\Test\TestAbstract;
 
 /**
- * Tests for Players
+ * Tests for Activities
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class PlayersTest extends TestAbstract
+class ActivitiesTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Players';
-    protected $resourceName = 'players';
+    protected $namespace = '\Badgeville\Cairo\Sites\Players\Activities';
+    protected $resourceName = 'activities';
 }

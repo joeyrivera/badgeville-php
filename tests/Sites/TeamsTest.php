@@ -29,12 +29,12 @@ namespace Badgeville\Test\Sites;
 use Badgeville\Test\TestAbstract;
 
 /**
- * Tests for Players
+ * Tests for Teams
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class PlayersTest extends TestAbstract
+class TeamsTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Players';
-    protected $resourceName = 'players';
+    protected $namespace = '\Badgeville\Cairo\Sites\Teams';
+    protected $resourceName = 'teams';
 }

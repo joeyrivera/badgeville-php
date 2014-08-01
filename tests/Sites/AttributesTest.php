@@ -29,12 +29,18 @@ namespace Badgeville\Test\Sites;
 use Badgeville\Test\TestAbstract;
 
 /**
- * Tests for Players
+ * Tests for Attributes
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class PlayersTest extends TestAbstract
+class AttributesTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Players';
-    protected $resourceName = 'players';
+    protected $namespace = '\Badgeville\Cairo\Sites\Attributes';
+    protected $resourceName = 'attributes';
+    protected $findJson = '';
+    
+    public function testFind()
+    {
+        $this->markTestIncomplete("Waiting to have data in api to get sample json");
+    }
 }
