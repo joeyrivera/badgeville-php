@@ -27,6 +27,7 @@
 namespace Badgeville\Cairo;
 
 use Badgeville\Cairo\Sites;
+use Badgeville\Cairo\Utils\Collection;
 use InvalidArgumentException;
 use BadMethodCallException;
 
@@ -210,20 +211,33 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Find all resources of this type
      * 
+     * Limit can only go up to 30
+     * 
+     * Included children only come back with 10 items max regardless of what the 
+     * limit is set for the parent call.
+     * 
      * @param array $params
-     * @return array
+     * @return \Badgeville\Cairo\Utils\Collection
      */
     public function findAll(array $params = [])
     {
+        // add defaults
+        $params['with_count'] = "true";
+        $params['offset'] = !empty($params['offset']) ? $params['offset'] : 0; // 30 is max limit
+        $params['limit'] = !empty($params['limit']) ? $params['limit'] : 30; // 30 is max limit
+        
         $uri = $this->uriBuilder();
         $response = $this->getSite()->getRequest($uri, $params);
 
+        // lets get what we need for pagination
+        extract($response['_context_info']);
+
         // convert to our stuff
-        $collection = [];
+        $collection = new Collection([], $offset, $limit, $count);
         foreach ($response[$this->getResourceName()] as $item) {
             $newItem = clone $this;
             $newItem->setData($item);
-            $collection[] = $newItem;
+            $collection->append($newItem);
         }
         
         return $collection;

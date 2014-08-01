@@ -64,9 +64,7 @@ if (!empty($_GET['class'])) {
         try {
             $call = '$site->'.$class.'()->findAll()';
             $items = $site->$class()->findAll();
-            foreach ($items as $item) {
-                $data[] = $item->toArray();
-            }
+            $data = $items->toArray();
         } catch (\Exception $e) {
             $data = $e->getMessage();
         }

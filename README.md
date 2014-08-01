@@ -68,11 +68,8 @@ $activity = $site->players('234lkj234lkj234lkj')->activities()->create([
 ```
 
 ###Todos
-* collections
-* pagination
-* unittesting
+* unit testing
 * metadata mapping?
-* pass in guzzle adapter?
 * monolog
 * decide on exceptions
 * need error handling, resources should indicate what they can do ex: create vs find

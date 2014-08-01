@@ -24,21 +24,11 @@
  * THE SOFTWARE.
  */
 
-require_once '../vendor/autoload.php';
+require_once 'config.php';
 
-// check for config file
-if (!is_file('config.php')) {
-    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
-}
 
-use Badgeville\Sites;
+$players = $site->players()->findAll(['limit' => 5, 'offset' => 1]);
 
-$site = new Sites(require_once 'config.php');
-$players = $site->players()->findAll(['limit' => 1, 'with_count' => true]);
-
-var_dump($players);
-
-foreach ($players as $player) {
-    var_dump($player->toArray());
-}
+var_dump($players->getPagination());
+var_dump($players->toArray());
 
