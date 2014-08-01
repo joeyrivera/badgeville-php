@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Players;
+namespace Badgeville\Sites\Players;
 
 use Badgeville\ResourceAbstract;
 
@@ -35,5 +35,10 @@ use Badgeville\ResourceAbstract;
  */
 class Progresses extends ResourceAbstract
 {
-
+    protected $resourceName = 'progresses';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

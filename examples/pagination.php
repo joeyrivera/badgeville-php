@@ -31,9 +31,9 @@ if (!is_file('config.php')) {
     throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
 
-use Badgeville\Site;
+use Badgeville\Sites;
 
-$site = new Site(require_once 'config.php');
+$site = new Sites(require_once 'config.php');
 $players = $site->players()->findAll(['limit' => 1, 'with_count' => true]);
 
 var_dump($players);

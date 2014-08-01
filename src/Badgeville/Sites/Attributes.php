@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Players;
+namespace Badgeville\Sites;
 
 use Badgeville\ResourceAbstract;
 
@@ -33,7 +33,12 @@ use Badgeville\ResourceAbstract;
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Positions extends ResourceAbstract
+class Attributes extends ResourceAbstract
 {
-
+    protected $resourceName = 'attributes';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

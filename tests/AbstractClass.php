@@ -51,6 +51,6 @@ abstract class AbstractClass extends \PHPUnit_Framework_TestCase
             $config['adapter'] = $mockAdapter;
         }
         
-        return new \Badgeville\Site($config);
+        return new \Badgeville\Sites($config);
     }
 }

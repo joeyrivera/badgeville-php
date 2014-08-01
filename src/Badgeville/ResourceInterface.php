@@ -33,5 +33,5 @@ namespace Badgeville;
  */
 interface ResourceInterface 
 {
-    
+    public function getResourceName();
 }

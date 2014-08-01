@@ -36,7 +36,7 @@ use GuzzleHttp\Stream\Stream;
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class SiteTest extends AbstractClass
+class SitesTest extends AbstractClass
 {
     private $playersJson = '{"players":[{"id":"53d7dd7ec3fcd8c990006c28","name":"Joey Rivera","display_name":null,"first_name":null,"last_name":null,"image":"https://sandbox.badgeville.com/images/misc/missing/bar/user_nopicture.png","units":{"points":{"id":null,"display_name":"Points","name":"points","abbreviation":"pts","type":"points","order":null,"all":0.0,"year":0.0,"month":0.0,"week":0.0,"day":0.0}}}],"_context_info":{"offset":0,"limit":1}}';
     private $errorJson = '{"errors":[{"code":404,"status":"Not Found","messages":["Invalid route."]}]}';
@@ -46,7 +46,7 @@ class SiteTest extends AbstractClass
      */
     public function testConstructExceptionNoConfig()
     {
-        new \Badgeville\Site();
+        new \Badgeville\Sites();
     }
     
     /**
@@ -54,7 +54,7 @@ class SiteTest extends AbstractClass
      */
     public function testConstructExceptionMissingConfigKey()
     {
-        new \Badgeville\Site(['test' => false]);
+        new \Badgeville\Sites(['test' => false]);
     }
     
     /**
@@ -62,7 +62,7 @@ class SiteTest extends AbstractClass
      */
     public function testConstructExceptionInvalidConfigValues()
     {
-        new \Badgeville\Site([
+        new \Badgeville\Sites([
             'url' => '',
             'apiVersion' => '',
             'apiKey' => '',
@@ -73,7 +73,7 @@ class SiteTest extends AbstractClass
     public function testConstruct()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('\Badgeville\Site', $site);
+        $this->assertInstanceOf('\Badgeville\Sites', $site);
         
         $client = $site->getClient();
         $this->assertInstanceOf('\GuzzleHttp\Client', $client);

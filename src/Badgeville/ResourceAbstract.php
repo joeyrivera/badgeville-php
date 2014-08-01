@@ -39,7 +39,7 @@ abstract class ResourceAbstract implements ResourceInterface
      * Track who's the parent owner of this resource
      * @var \Badgeville\ResourceAbstract
      */
-    protected $parent;
+    protected $parent = null;
     
     /**
      * Stores the properties for the resource
@@ -49,28 +49,20 @@ abstract class ResourceAbstract implements ResourceInterface
     protected $data = [];
     
     /**
-     * Track site owner for api calls
-     * 
-     * @var \Badgeville\Site
-     */
-    protected $site;
-    
-    /**
      * Called from parent
      * 
      * @param \Badgeville\ResourceInterface $parent
      * @param string $id
      * @return \Badgeville\ResourceAbstract
      */
-    public function __construct(ResourceInterface $parent, $id = null)
+    public function __construct($id = null, ResourceInterface $parent = null)
     {
-        $this->parent = $parent;
-        
         if (!is_null($id) && !is_scalar($id)) {
             throw new InvalidArgumentException("Invalid id passed.");
         }
         
         $this->id = $id;
+        $this->parent = $parent;
         
         return $this;
     }
@@ -101,7 +93,7 @@ abstract class ResourceAbstract implements ResourceInterface
     }
     
     /**
-     * To load children of this resource
+     * Instantiate a requested resource and inject it this site
      * 
      * @param string $name
      * @param array $params
@@ -109,14 +101,25 @@ abstract class ResourceAbstract implements ResourceInterface
      */
     public function __call($name, array $params = [])
     {
+        // namespace is child of parents namespace, append to end
+        $namespace = get_called_class() . '\\' . ucwords($name);
+        $newName = get_called_class() . '\\' . ucwords($name);
+
+        // figure out file path to check
+        $filePath = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $newName, $count) . ".php";
+
+        // does file exist?
+        if (!realpath($filePath)) {
+            throw new BadMethodCallException("Unable to find called resource {$newName}.");
+        }
+        
         $id = null;
         if (!empty($params)) {
             $id = $params[0];
         }
         
-        $newName = get_called_class(). '\\' . ucwords($name);
-        $instance = new $newName($this, $id);
-        return $instance->setSite($this->getSite());
+        // always inject site into resource
+        return new $namespace($id, $this);
     }
     
     /**
@@ -142,27 +145,16 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Get site root of all parents
      * 
-     * @return \Badgeville\Site
+     * @return \Badgeville\Sites
      */
     public function getSite()
     {
-        if ($this->parent instanceof Site) {
-            return $this->parent;
+        $instance = $this;
+        while (!$instance instanceof \Badgeville\Sites) {
+            $instance = $instance->getParent();
         }
-        return $this->site;
-    }
-    
-    /**
-     * To inject site
-     * 
-     * @param \Badgeville\Site $site
-     * @return \Badgeville\ResourceAbstract
-     */
-    public function setSite($site)
-    {
-        $this->site = $site;
         
-        return $this;
+        return $instance;
     }
     
     /**
@@ -188,14 +180,21 @@ abstract class ResourceAbstract implements ResourceInterface
      * @param array $params
      * @return \Badgeville\ResourceAbstract
      */
-    public function find($id, array $params = [])
+    public function find($id = null, array $params = [])
     {
-        $uri = $this->uriBuilder(get_called_class()) . $id;
-        $indexName = strtolower(substr(get_called_class(), strrpos(get_called_class(), '\\') + 1));
-        $response = $this->getSite()->getRequest($uri, $params);
+        // either an id is passed or is already set
+        if (!is_null($id)) {
+            $uri = $this->uriBuilder() . '/' . $id;
+        } elseif ($this->id) {
+            $uri = $this->uriBuilder() . '/' . $this->id;
+        } else {
+            //error
+        }
         
+        $response = $this->getSite()->getRequest($uri, $params);
+
         $item = clone $this;
-        return $item->setData($response[$indexName][0]);
+        return $item->setData($response[$this->getResourceName()][0]);
     }
     
     /**
@@ -206,13 +205,12 @@ abstract class ResourceAbstract implements ResourceInterface
      */
     public function findAll(array $params = [])
     {
-        $uri = $this->uriBuilder(get_called_class());
-        $indexName = strtolower(substr(get_called_class(), strrpos(get_called_class(), '\\') + 1));
+        $uri = $this->uriBuilder();
         $response = $this->getSite()->getRequest($uri, $params);
-        
+
         // convert to our stuff
         $collection = [];
-        foreach ($response[$indexName] as $item) {
+        foreach ($response[$this->getResourceName()] as $item) {
             $newItem = clone $this;
             $newItem->setData($item);
             $collection[] = $newItem;
@@ -246,24 +244,17 @@ abstract class ResourceAbstract implements ResourceInterface
      * @param string $namespace
      * @return string
      */
-    protected function uriBuilder($namespace)
+    protected function uriBuilder()
     {
-        // extract resource names from namespace and create url paths including id's
-        $parts = explode('\\', $namespace);
-
-        // remove first part (Badgeville)
-        array_shift($parts);
-
-        $uri = '';
-        foreach ($parts as $part) {
-            $uri .= strtolower($part) . '/';
-            
-            if (false !== $id = $this->getIdOfParent($part)) {
-                $uri .= "{$id}/";
-            }
+        $parts = [$this->getResourceName()];
+        $instance = $this;
+        
+        while (null !== $instance = $instance->getParent()) {
+            $parts[] = $instance->id;
+            $parts[] = $instance->getResourceName();
         }
         
-        return $uri;
+        return implode('/', array_reverse($parts));
     }
     
     /**
@@ -275,8 +266,7 @@ abstract class ResourceAbstract implements ResourceInterface
     protected function getIdOfParent($parentName)
     {
         $instance = $this;
-        do {
-            $instance = $instance->getParent();
+        while (null !== $instance = $instance->getParent()) {
             $insanceName = get_class($instance);
             
             // look at the end of the string for a match
@@ -286,10 +276,10 @@ abstract class ResourceAbstract implements ResourceInterface
             if ($currentName == $parentName) {
                 return $instance->id;
             }
-            
-        } while (!($instance instanceof \Badgeville\Site));
+        } 
         
         return false;
     }
     
+    abstract public function getResourceName();    
 }

@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Players\MissionHistories;
+namespace Badgeville\Sites;
 
 use Badgeville\ResourceAbstract;
 
@@ -33,7 +33,12 @@ use Badgeville\ResourceAbstract;
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Rewards extends ResourceAbstract
+class Units extends ResourceAbstract
 {
+    protected $resourceName = 'units';
     
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

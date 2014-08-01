@@ -31,9 +31,9 @@ if (!is_file('config.php')) {
     throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
 
-use Badgeville\Site;
+use Badgeville\Sites;
 
-$site = new Site(require_once 'config.php');
+$site = new Sites(require_once 'config.php');
 $player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
 var_dump($player->toArray());
 

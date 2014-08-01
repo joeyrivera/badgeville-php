@@ -24,15 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+namespace Badgeville\Sites;
+
+use Badgeville\ResourceAbstract;
 
 /**
  * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Teams extends ResourceAbstract
+class Missions extends ResourceAbstract
 {
+    protected $resourceName = 'missions';
     
-    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

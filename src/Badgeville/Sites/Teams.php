@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 Joey Rivera <joey1.rivera@gmail.com>.
@@ -24,20 +24,21 @@
  * THE SOFTWARE.
  */
 
-require_once '../vendor/autoload.php';
+namespace Badgeville\Sites;
 
-// check for config file
-if (!is_file('config.php')) {
-    throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
+use Badgeville\ResourceAbstract;
+
+/**
+ * Description of Players
+ *
+ * @author Joey Rivera <joey1.rivera@gmail.com>
+ */
+class Teams extends ResourceAbstract
+{
+    protected $resourceName = 'teams';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }
-
-use Badgeville\Sites;
-
-$site = new Sites(require_once 'config.php');
-
-$player = $site->players()->create([
-    'name' => 'Joey Tester3',
-    'email' => 'joeyrivera@air-watch.com3'
-]);
-
-var_dump($player->toArray());

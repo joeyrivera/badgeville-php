@@ -24,17 +24,14 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Players;
-
-use Badgeville\ResourceAbstract;
+namespace Badgeville;
 
 /**
- * Description of Players
+ * Description of ClientInterface
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Activities extends ResourceAbstract
+interface ClientInterface 
 {
-    
 
 }

@@ -24,15 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+namespace Badgeville\Sites\Players;
+
+use Badgeville\ResourceAbstract;
 
 /**
  * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Behaviors extends ResourceAbstract
+class SocialIdentities extends ResourceAbstract
 {
+    protected $resourceName = 'socialidentities';
     
-    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

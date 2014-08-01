@@ -39,8 +39,10 @@ use GuzzleHttp\Message\Response;
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Site implements ResourceInterface
+class Sites extends ResourceAbstract
 {
+    protected $resourceName = 'sites';
+    
     /**
      * Track the guzzle client for api calls
      * 
@@ -48,79 +50,9 @@ class Site implements ResourceInterface
      */
     protected $client;
     
-    /**
-     * configuration information passed to site
-     * 
-     * @var array
-     */
-    protected $config;
-    
-    /**
-     * Creates guzzle instance
-     * 
-     * @param array $config
-     */
-    public function __construct(array $params)
+    public function getResourceName()
     {
-        $requiredParams = ['url', 'apiVersion', 'apiKey', 'siteId'];
-        
-        // validate params
-        foreach ($requiredParams as $requiredParam) {
-            if (!array_key_exists($requiredParam, $params)) {
-                throw new Exception("Missing required parameter {$requiredParam} in construct.");
-            }
-            
-            if (!is_string($params[$requiredParam]) || empty($params[$requiredParam])) {
-                throw new InvalidArgumentException("Invalid required parameter {$requiredParam} value {$params[$requiredParam]} in construct.");
-            }
-        }
-        
-        $config = [
-            'base_url' => [
-                "{$params['url']}/{version}/{key}/sites/{site}/", [
-                    'version' => $params['apiVersion'],
-                    'key' => $params['apiKey'],
-                    'site' => $params['siteId']
-                ]
-            ]
-        ];
-            
-        // check for adapter
-        if (!empty($params['adapter'])) {
-            $config['adapter'] = $params['adapter'];
-        }    
-        
-        $this->config = $params;
-        $this->client = new GuzzleClient($config);
-    }
-    
-    /**
-     * Instanciate a requested resource and inject it this site
-     * 
-     * @param string $name
-     * @param array $params
-     * @return \Badgeville\ResourceAbstract
-     */
-    public function __call($name, array $params = [])
-    {
-        $id = null;
-        if (!empty($params)) {
-            $id = $params[0];
-        }
-        
-        // figure out namespace to load
-        $newName = __NAMESPACE__. '\\' . ucwords($name);
-        
-        // figure out file path to check
-        $filePath = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $newName, $count) . ".php";
-        
-        // does file exist?
-        if (!realpath($filePath)) {
-            throw new BadMethodCallException("Unable to find called resource {$name}.");
-        }
-        
-        // always inject site into resource
-        return new $newName($this, $id);
+        return $this->resourceName;
     }
     
     /**
@@ -131,6 +63,13 @@ class Site implements ResourceInterface
     public function getClient()
     {
         return $this->client;
+    }
+    
+    public function setClient($client)
+    {
+        $this->client = $client;
+        
+        return $this;
     }
     
     /**
@@ -152,7 +91,7 @@ class Site implements ResourceInterface
         if ($uri[0] == '/') {
             $uri = substr($uri, 1);
         }
-        
+
         try {
             $request = $this->client->createRequest('GET', $uri, ['query' => $params]);
             $response = $this->client->send($request)->json();

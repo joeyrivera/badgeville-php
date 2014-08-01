@@ -31,9 +31,9 @@ if (!is_file('config.php')) {
     throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
 
-use Badgeville\Site;
+use Badgeville\Sites;
 
-$site = new Site(require_once 'config.php');
+$site = new Sites(require_once 'config.php');
 
 $activity = $site->players('53d814c2d4ed0ec26b0069b5')->activities()->create([
     'verb' => 'logged'

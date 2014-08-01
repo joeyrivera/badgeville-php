@@ -75,3 +75,11 @@ $activity = $site->players('234lkj234lkj234lkj')->activities()->create([
 * monolog
 * decide on exceptions
 * need error handling, resources should indicate what they can do ex: create vs find
+
+
+change 
+    so all singular
+    site works just like all other resources (active record)
+    passing in an id to any resource defines it's id, find will load it
+    track url name in property for each resource
+    change default url to start at api key not at site, each resource will add that include site

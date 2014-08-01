@@ -24,7 +24,9 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+namespace Badgeville\Sites;
+
+use Badgeville\ResourceAbstract;
 
 /**
  * Description of Players
@@ -33,6 +35,10 @@ namespace Badgeville;
  */
 class Rewards extends ResourceAbstract
 {
+    protected $resourceName = 'rewards';
     
-    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

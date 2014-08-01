@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Leaderboards;
+namespace Badgeville\Sites\Leaderboards;
 
 use Badgeville\ResourceAbstract;
 
@@ -35,5 +35,10 @@ use Badgeville\ResourceAbstract;
  */
 class Ranks extends ResourceAbstract
 {
-
+    protected $resourceName = 'ranks';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

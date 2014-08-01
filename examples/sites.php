@@ -1,6 +1,6 @@
 <?php
 
-/*
+/* 
  * The MIT License
  *
  * Copyright 2014 Joey Rivera <joey1.rivera@gmail.com>.
@@ -24,15 +24,19 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+require_once 'config.php';
 
-/**
- * Description of Players
- *
- * @author Joey Rivera <joey1.rivera@gmail.com>
- */
-class Jobs extends ResourceAbstract
-{
-    
-    
+//$items = $site->players('53d6530a88b616814400657c')->activities()->findAll();
+$items = $site->leaderboards('537a32a96173b1a867001f25')->ranks('1')->find();
+//$items = $site->players()->findAll();
+
+if (!is_array($items)) {
+    $objects[] = $items;
+} else $objects = $items;
+
+foreach ($objects as $object) {
+    var_dump($object->toArray());
 }
+
+//$item = $site->find();
+//var_dump($item->toArray());

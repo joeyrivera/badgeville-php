@@ -1,5 +1,6 @@
 First instantiate client
-    $site = new Site($config);
+    $site = new Site();
+    $site->setClient(new Client($config));
 
 Now we can go through all objects with chaining if needed
     // get many players

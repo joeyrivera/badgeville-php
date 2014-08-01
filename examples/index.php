@@ -24,22 +24,17 @@
  * THE SOFTWARE.
  */
 
-require_once '../vendor/autoload.php';
-
-use Badgeville\Site;
-
 // check for config file
 if (!is_file('config.php')) {
     throw new Exception("The configuration file is missing. Create one based on the config.dist.php file and add the required information.");
 }
 
-// everything starts with a site, all other calls are related to the site
-$site = new Site(require_once 'config.php');
+require_once 'config.php';
 
 $resources = [];
 $data = [];
 
-$path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Badgeville';
+$path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Badgeville' . DIRECTORY_SEPARATOR . 'Sites';
 
 // create map of directory structure to render the menu dynamically
 $dirArray = mapDir($path);
@@ -123,8 +118,7 @@ function mapDir($path)
     
     // if file map, else call recursively
     while (false !== ($entry = $dir->read())) {
-        if (is_file($path . DIRECTORY_SEPARATOR . $entry) && !isset($data[substr($entry, 0, -4)]) 
-            && $entry != 'ResourceAbstract.php' && $entry != 'Site.php') {
+        if (is_file($path . DIRECTORY_SEPARATOR . $entry) && !isset($data[substr($entry, 0, -4)])) {
             $data[substr($entry, 0, -4)] = [];
         } elseif (is_dir($path . DIRECTORY_SEPARATOR . $entry) && $entry != '.' && $entry != '..') {
             $data[$entry] = mapDir($path . DIRECTORY_SEPARATOR . $entry);
