@@ -229,7 +229,7 @@ function addInputs($parent, $child = [], $depth = 0)
             examples folder and add your api key and site id, you should be able to use this utility.
         </p>
 
-        <div style="float:left;margin-right:20px">
+        <div style="float:right;">
             <h3>Resources</h3>
             <?=drawForms($dirArray);?>
         </div>

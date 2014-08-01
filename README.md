@@ -38,8 +38,8 @@ To start using the library you need create a site instance passing it the site i
 and setting the client to a GuzzleHttp\Client instance.
 
 ```php
-use Badgeville\Site;
-$site = new Site($siteId);
+use Badgeville\Sites;
+$site = new Sites($siteId);
 $site->setClient(new GuzzleHttp\Client($params));
 ```
 
