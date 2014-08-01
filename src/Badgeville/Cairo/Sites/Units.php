@@ -24,9 +24,9 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Sites;
+namespace Badgeville\Cairo\Sites;
 
-use Badgeville\ResourceAbstract;
+use Badgeville\Cairo\ResourceAbstract;
 
 /**
  * Description of Players

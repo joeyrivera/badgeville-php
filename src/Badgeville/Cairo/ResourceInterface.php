@@ -24,21 +24,14 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Sites;
-
-use Badgeville\ResourceAbstract;
+namespace Badgeville\Cairo;
 
 /**
- * Description of Players
+ * Description of ResourceInterface
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Rewards extends ResourceAbstract
+interface ResourceInterface 
 {
-    protected $resourceName = 'rewards';
-    
-    public function getResourceName()
-    {
-        return $this->resourceName;
-    }
+    public function getResourceName();
 }

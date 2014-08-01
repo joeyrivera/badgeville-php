@@ -24,22 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Sites\Players;
+namespace Badgeville\Cairo\Sites;
 
-use Badgeville\ResourceAbstract;
+use Badgeville\Cairo\ResourceAbstract;
 
 /**
  * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Activities extends ResourceAbstract
+class Jobs extends ResourceAbstract
 {
-    protected $resourceName = 'activities';
+    protected $resourceName = 'jobs';
     
     public function getResourceName()
     {
         return $this->resourceName;
     }
-
 }

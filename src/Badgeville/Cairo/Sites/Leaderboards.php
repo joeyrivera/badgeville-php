@@ -24,18 +24,18 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Sites;
+namespace Badgeville\Cairo\Sites;
 
-use Badgeville\ResourceAbstract;
+use Badgeville\Cairo\ResourceAbstract;
 
 /**
  * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Jobs extends ResourceAbstract
+class Leaderboards extends ResourceAbstract
 {
-    protected $resourceName = 'jobs';
+    protected $resourceName = 'leaderboards';
     
     public function getResourceName()
     {

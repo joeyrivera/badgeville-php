@@ -24,8 +24,9 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+namespace Badgeville\Cairo;
 
+use Badgeville\Cairo\Sites;
 use InvalidArgumentException;
 use BadMethodCallException;
 
@@ -108,8 +109,8 @@ abstract class ResourceAbstract implements ResourceInterface
         $namespace = get_called_class() . '\\' . ucwords($name);
         $newName = get_called_class() . '\\' . ucwords($name);
 
-        // figure out file path to check
-        $filePath = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $newName, $count) . ".php";
+        // figure out file path to check - strip out badgeville and cairo folders
+        $filePath = dirname(dirname(dirname(__FILE__))) . DIRECTORY_SEPARATOR . str_replace("\\", DIRECTORY_SEPARATOR, $newName, $count) . ".php";
 
         // does file exist?
         if (!realpath($filePath)) {
@@ -154,12 +155,12 @@ abstract class ResourceAbstract implements ResourceInterface
     /**
      * Get site root of all parents
      * 
-     * @return \Badgeville\Sites
+     * @return \Badgeville\Cairo\Sites
      */
     public function getSite()
     {
         $instance = $this;
-        while (!$instance instanceof \Badgeville\Sites) {
+        while (!$instance instanceof Sites) {
             $instance = $instance->getParent();
         }
         

@@ -2,7 +2,7 @@
 
 require_once '../vendor/autoload.php';
 
-use Badgeville\Sites;
+use Badgeville\Cairo\Sites;
 use GuzzleHttp\Client;
 
 $params = [

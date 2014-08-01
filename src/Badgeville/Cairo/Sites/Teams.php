@@ -24,14 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+namespace Badgeville\Cairo\Sites;
+
+use Badgeville\Cairo\ResourceAbstract;
 
 /**
- * Description of ResourceInterface
+ * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-interface ResourceInterface 
+class Teams extends ResourceAbstract
 {
-    public function getResourceName();
+    protected $resourceName = 'teams';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

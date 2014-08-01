@@ -34,7 +34,7 @@ require_once 'config.php';
 $resources = [];
 $data = [];
 
-$path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Badgeville' . DIRECTORY_SEPARATOR . 'Sites';
+$path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Badgeville' . DIRECTORY_SEPARATOR . 'Cairo' . DIRECTORY_SEPARATOR . 'Sites';
 
 // create map of directory structure to render the menu dynamically
 $dirArray = mapDir($path);

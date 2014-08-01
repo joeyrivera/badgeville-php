@@ -24,11 +24,10 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+namespace Badgeville\Cairo;
 
 use Exception;
 use InvalidArgumentException;
-use BadMethodCallException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\Response;

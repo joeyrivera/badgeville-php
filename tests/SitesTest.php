@@ -46,7 +46,7 @@ class SitesTest extends AbstractClass
      */
     public function testSetClientExceptionInvalidClient()
     {
-        $site = new \Badgeville\Sites();
+        $site = new \Badgeville\Cairo\Sites();
         $site->setClient('asdf');
     }
     
@@ -55,7 +55,7 @@ class SitesTest extends AbstractClass
      */
     public function testConstructExceptionInvalidConfigValues()
     {
-        new \Badgeville\Sites([
+        new \Badgeville\Cairo\Sites([
             'url' => '',
             'apiVersion' => '',
             'apiKey' => '',
@@ -66,7 +66,7 @@ class SitesTest extends AbstractClass
     public function testConstruct()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('\Badgeville\Sites', $site);
+        $this->assertInstanceOf('\Badgeville\Cairo\Sites', $site);
         
         $site->setClient(new \GuzzleHttp\Client());
         
@@ -142,19 +142,19 @@ class SitesTest extends AbstractClass
     public function testCallPlayers()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Sites\Players', $site->players());
+        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players', $site->players());
     }
     
     public function testCallPlayersActivities()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Sites\Players\Activities', $site->players('123')->activities());
+        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players\Activities', $site->players('123')->activities());
     }
     
     public function testCallPlayersActivitiesBehaviors()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Sites\Players\Activities\Behaviors', $site->players('123')->activities('456')->behaviors());
+        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players\Activities\Behaviors', $site->players('123')->activities('456')->behaviors());
     }
     
     /**
@@ -163,6 +163,6 @@ class SitesTest extends AbstractClass
     public function testCallPlayersActivitiesBehaviorsExceptionNoParentId()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Sites\Players\Activities\Behaviors', $site->players()->activities()->behaviors());
+        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players\Activities\Behaviors', $site->players()->activities()->behaviors());
     }
 }

@@ -24,14 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville;
+namespace Badgeville\Cairo\Sites\Leaderboards;
+
+use Badgeville\Cairo\ResourceAbstract;
 
 /**
- * Description of ClientInterface
+ * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-interface ClientInterface 
+class Ranks extends ResourceAbstract
 {
-
+    protected $resourceName = 'ranks';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

@@ -24,52 +24,14 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Sites;
-
-use Badgeville\ResourceAbstract;
+namespace Badgeville\Cairo;
 
 /**
- * Description of Players
+ * Description of ClientInterface
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class Players extends ResourceAbstract
+interface ClientInterface 
 {
-    protected $resourceName = 'players';
-    
-    public function getResourceName()
-    {
-        return $this->resourceName;
-    }
-    
-    public function save($obj = null)
-    {
-        if ($obj instanceof $this) {
-            $objData = $obj->toArray();
-        } else {
-            $objData = $this->data;
-        }
-        
-        $allowedFields = ['name', 'display_name', 'first_name', 'last_name', 'image', 'admin', 'custom'];
-        $data = array_intersect_key($objData, array_flip($allowedFields));
-        
-        // need to remove null values
-        $data = array_filter($data, function ($value) {
-            return is_null($value) ? false : true;
-        });
-        
-        $params = [
-            'do' => 'update',
-            'data' => json_encode($data, JSON_UNESCAPED_SLASHES)
-        ];
-        
-        $uri = $this->uriBuilder() . '/' . $this->id;
-        $response = $this->getSite()->getRequest($uri, $params);
-        
-        $player = clone $this;
-        $player->setData($response['players'][0]);
-        
-        return $player;
-    }
-    
+
 }

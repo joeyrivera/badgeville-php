@@ -27,10 +27,6 @@
 namespace Badgeville\Test\Sites;
 
 use Badgeville\Test\AbstractClass;
-use GuzzleHttp\Adapter\MockAdapter;
-use GuzzleHttp\Adapter\TransactionInterface;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
 
 /**
  * Tests for Players
@@ -44,7 +40,7 @@ class PlayersTest extends AbstractClass
      */
     public function testConstructExceptionInvalidId()
     {
-        new \Badgeville\Sites\Players([]);
+        new \Badgeville\Cairo\Sites\Players([]);
     }
     
     /**
@@ -52,11 +48,11 @@ class PlayersTest extends AbstractClass
      */
     public function testConstructExceptionInvalidParent()
     {
-        new \Badgeville\Sites\Players('34', []);
+        new \Badgeville\Cairo\Sites\Players('34', []);
     }
 
     public function testConstruct()
     {
-        $this->assertInstanceOf('\Badgeville\Sites\Players', new \Badgeville\Sites\Players());
+        $this->assertInstanceOf('\Badgeville\Cairo\Sites\Players', new \Badgeville\Cairo\Sites\Players());
     }
 }
