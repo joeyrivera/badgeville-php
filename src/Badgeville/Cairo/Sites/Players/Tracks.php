@@ -1,6 +1,6 @@
 <?php
 
-/* 
+/*
  * The MIT License
  *
  * Copyright 2014 Joey Rivera <joey1.rivera@gmail.com>.
@@ -24,10 +24,21 @@
  * THE SOFTWARE.
  */
 
-require_once 'config.php';
+namespace Badgeville\Cairo\Sites\Players;
 
-$activity = $site->players('53d814c2d4ed0ec26b0069b5')->activities()->create([
-    'verb' => 'logged'
-]);
+use Badgeville\Cairo\ResourceAbstract;
 
-var_dump($activity->toArray());
+/**
+ * Description of Tracks
+ *
+ * @author Joey Rivera <joey1.rivera@gmail.com>
+ */
+class Tracks extends ResourceAbstract
+{
+    protected $resourceName = 'tracks';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
+}

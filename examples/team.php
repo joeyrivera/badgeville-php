@@ -26,12 +26,20 @@
 
 require_once 'config.php';
 
-$player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
-var_dump($player->toArray());
+/** create **/
+//$result = $site->teams()->create([
+//    'name' => 'Team Joey3',
+//    'display_name' => 'Team ProSauce3',
+//    'active' => true
+//]);
 
-$player->display_name = 'testing3';
-$player->save();
-//$site->players()->save($player);
 
-$player = $site->players()->find('53d7dd5d6173b1c1ca006c22');
-var_dump($player->toArray());
+/** update **/
+$result = $site->teams()->find('53e12ee5c3fcd88be2002de4');
+$result->display_name = 'team joey from sdk2';
+$result->update(); //or $site->players()->update($player);
+
+
+
+
+var_dump($result->toArray());

@@ -26,9 +26,29 @@
 
 require_once 'config.php';
 
-$player = $site->players()->create([
-    'name' => 'Joey Tester6',
-    'email' => 'joeyrivera@air-watch.com6'
-]);
+/** create **/
+//$result = $site->players()->create([
+//    'name' => 'Joey <asdf>  Tester8',
+//    'email' => 'joeyrivera@air-watch.com8',
+//    'sdfgs' => 'asdf'
+//]);
 
-var_dump($player->toArray());
+/** update **/
+//$result = $site->players()->find('53dbc9278803dad6a3000ffa');
+//$result->display_name = 'testing5';
+//$result->update(); //or $site->players()->update($player);
+
+/** join team **/
+//$result = $site->players('53e12cfd6173b18161002e2a')->joinTeams(['53e120c6c3fcd8440d002dc3','53e12012446f2dbe8d003309']);
+
+/** leave team **/
+//$result = $site->players('53e12cfd6173b18161002e2a')->leaveTeams(['53e120c6c3fcd8440d002dc3']);
+
+
+/** create activity **/
+//$result = $site->players('53dbc9278803dad6a3000ffa')->activities()->create(['verb' => 'logged in sdk']);
+
+/** update activity history **/
+$result = $site->players('53dbc9278803dad6a3000ffa')->activities('53e134a0c3fcd8b302002fb9')->updateHistory();
+
+var_dump($result->toArray());

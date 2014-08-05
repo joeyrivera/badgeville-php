@@ -256,25 +256,6 @@ abstract class ResourceAbstract implements ResourceInterface
     }
     
     /**
-     * Sends a create call to the api and returns an instance of this resource
-     * 
-     * @param array $params
-     * @return \Badgeville\Cairo\ResourceInterface
-     */
-    public function create($params)
-    {
-        $insanceName = get_called_class();
-        $uri = $this->uriBuilder($insanceName) . "?do=create&data=" . json_encode($params);
-        $response = $this->getSite()->getRequest($uri);
-        
-        $currentName = strtolower(substr($insanceName, strrpos($insanceName, '\\') + 1));
-        $item = clone $this;
-        $item->setData($response[$currentName][0]);
-        
-        return $item;
-    }
-    
-    /**
      * Builds the uri that will be appended to the end of the default client url
      * 
      * Travels up the chain of parents to build the uri with their resource name 

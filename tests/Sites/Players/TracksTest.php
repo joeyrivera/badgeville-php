@@ -24,37 +24,17 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Test\Sites;
+namespace Badgeville\Test\Sites\Players;
 
 use Badgeville\Test\TestAbstract;
-use GuzzleHttp\Adapter\MockAdapter;
-use GuzzleHttp\Adapter\TransactionInterface;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
 
 /**
- * Tests for Behaviors
+ * Tests for Tracks
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class BehaviorsTest extends TestAbstract
+class TracksTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Behaviors';
-    protected $resourceName = 'behaviors';
-    protected $findJson = '{"behaviors":[{"id":"53d662b1e800d5affe0067ec","name":"Test_5","image":"hand","units":{"points":{"id":null,"display_name":"Points","name":"points","abbreviation":"pts","type":"points","order":null,"possible":5}}}],"_context_info":{}}';
-    
-    public function testFind()
-    {
-        $mockAdapter = new MockAdapter(function (TransactionInterface $trans) {
-            $response = new Response(200, [], Stream::factory($this->findJson));
-            
-            return $response;
-        });
-        
-        $instance = $this->getValidInstance($mockAdapter);
-        $item = $instance->find('53d662b1e800d5affe0067ec');
-        
-        $this->assertInstanceOf($this->namespace, $item);
-        $this->assertEquals('Test_5', $item->name);
-    }
+    protected $namespace = '\Badgeville\Cairo\Sites\Players\Tracks';
+    protected $resourceName = 'tracks';
 }

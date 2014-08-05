@@ -27,9 +27,10 @@
 namespace Badgeville\Cairo\Sites\Players;
 
 use Badgeville\Cairo\ResourceAbstract;
+use \DateTime;
 
 /**
- * Description of Players
+ * Description of Activities
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
@@ -40,6 +41,59 @@ class Activities extends ResourceAbstract
     public function getResourceName()
     {
         return $this->resourceName;
+    }
+    
+    /**
+     * Creates a new activity for a player
+     * 
+     * @param array $params
+     * @return \Badgeville\Cairo\Sites\Players\Activities
+     */
+    public function create($params)
+    {
+        // rules for different properties
+        $properties = [
+            'verb' => [
+                'required',
+                'filter' => FILTER_SANITIZE_STRING,
+            ]
+        ];
+        
+        // clean params up
+        $data = filter_var_array($params, $properties, false);
+
+        // make sure we have the required fields covered
+        foreach ($properties as $key => $value) {
+            if (isset($value['required']) && $value['required'] === true && empty($data[$key])) {
+                throw new Exception("The required field {$key} is missing or not valid.");
+            }
+        }
+        
+        $params = [
+            'do' => 'create',
+            'data' => json_encode($data, JSON_UNESCAPED_SLASHES) // needed or messes up urls
+        ];
+
+        $response = $this->getSite()->getRequest($this->uriBuilder(), $params);
+        
+        $item = clone $this;
+        $item->setData($response[$this->getResourceName()][0]);
+        
+        return $item;
+    }
+    
+    public function updateHistory($type = 'viewed')
+    {
+        $date = new DateTime();
+        
+        $params = [
+            'do' => 'update_history',
+            'data' => json_encode([$type => $date->format(DateTime::ISO8601)])
+        ];
+        
+        $response = $this->getSite()->getRequest($this->uriBuilder() . '/' . $this->id, $params);
+        
+        return $this->setData($response[$this->getResourceName()][0]);
     }
 
 }

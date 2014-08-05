@@ -27,6 +27,7 @@
 namespace Badgeville\Cairo\Sites;
 
 use Badgeville\Cairo\ResourceAbstract;
+use \Exception;
 
 /**
  * Description of Players
@@ -42,34 +43,151 @@ class Players extends ResourceAbstract
         return $this->resourceName;
     }
     
-    public function save($obj = null)
+    /**
+     * Creates a new players instance
+     * 
+     * @param array $params
+     * @return \Badgeville\Cairo\Sites\Players
+     */
+    public function create($params)
     {
+        // rules for different properties
+        $properties = [
+            'email' => [
+                'required',
+                'filter' => FILTER_VALIDATE_EMAIL,
+            ],
+            'name' => FILTER_SANITIZE_STRING,
+            'display_name' => FILTER_SANITIZE_STRING,
+            'first_name' => FILTER_SANITIZE_STRING,
+            'last_name' => FILTER_SANITIZE_STRING,
+            'image' => FILTER_VALIDATE_URL,
+            'admin' => [
+                'filter' => FILTER_VALIDATE_BOOLEAN,
+                'flags' => FILTER_NULL_ON_FAILURE
+            ],
+            //'custom' => FILTER_SANITIZE_STRING
+        ];
+        
+        // clean params up
+        $data = filter_var_array($params, $properties, false);
+
+        // make sure we have the required fields covered
+        foreach ($properties as $key => $value) {
+            if (isset($value['required']) && $value['required'] === true && empty($data[$key])) {
+                throw new Exception("The required field {$key} is missing or not valid.");
+            }
+        }
+        
+        $params = [
+            'do' => 'create',
+            'data' => json_encode($data, JSON_UNESCAPED_SLASHES) // needed or messes up urls
+        ];
+
+        $response = $this->getSite()->getRequest($this->uriBuilder(), $params);
+        
+        $item = clone $this;
+        $item->setData($response[$this->getResourceName()][0]);
+        
+        return $item;
+    }
+    
+    /**
+     * Updates a player resource
+     * 
+     * @param \Badgeville\Cairo\Sites\Players $obj
+     * @return \Badgeville\Cairo\Sites\Players
+     */
+    public function update($obj = null)
+    {
+        $useSelf = false;
         if ($obj instanceof $this) {
             $objData = $obj->toArray();
         } else {
+            $useSelf = true;
             $objData = $this->data;
         }
-        
-        $allowedFields = ['name', 'display_name', 'first_name', 'last_name', 'image', 'admin', 'custom'];
-        $data = array_intersect_key($objData, array_flip($allowedFields));
+
+        // rules for different properties
+        $properties = [
+            'name' => FILTER_SANITIZE_STRING,
+            'display_name' => FILTER_SANITIZE_STRING,
+            'first_name' => FILTER_SANITIZE_STRING,
+            'last_name' => FILTER_SANITIZE_STRING,
+            'image' => FILTER_VALIDATE_URL,
+            'admin' => [
+                'filter' => FILTER_VALIDATE_BOOLEAN,
+                'flags' => FILTER_NULL_ON_FAILURE
+            ],
+            //'custom' => FILTER_SANITIZE_STRING
+        ];
         
         // need to remove null values
-        $data = array_filter($data, function ($value) {
+        $data = array_filter($objData, function ($value) {
             return is_null($value) ? false : true;
         });
         
+        // clean params up
+        $data = filter_var_array($data, $properties, false);
+        
         $params = [
             'do' => 'update',
-            'data' => json_encode($data, JSON_UNESCAPED_SLASHES)
+            'data' => json_encode($data, JSON_UNESCAPED_SLASHES) // needed or messes up urls
         ];
+
+        $response = $this->getSite()->getRequest($this->uriBuilder() . '/' . $this->id, $params);
         
-        $uri = $this->uriBuilder() . '/' . $this->id;
-        $response = $this->getSite()->getRequest($uri, $params);
+        if ($useSelf) {
+            return $this->setData($response[$this->getResourceName()][0]);
+        }
         
         $player = clone $this;
-        $player->setData($response['players'][0]);
+        $player->setData($response[$this->getResourceName()][0]);
         
         return $player;
     }
     
+    /**
+     * Allows player to join one or many teams
+     * 
+     * @param mixed $params can pass in an id or array of ids
+     * @return \Badgeville\Cairo\Sites\Players
+     */
+    public function joinTeams($ids)
+    {
+        if (!is_array($ids)) {
+            $ids[] = $ids;
+        }
+
+        $params = [
+            'do' => 'join',
+            'data' => json_encode(['teams' => $ids])
+        ];
+        
+        $response = $this->getSite()->getRequest($this->uriBuilder() . '/' . $this->id, $params);
+        
+        return $this->setData($response[$this->getResourceName()][0]);
+    }
+    
+    /**
+     * Allows player to leave one or many teams
+     * 
+     * @param mixed $params can pass in an id or array of ids
+     * @return \Badgeville\Cairo\Sites\Players
+     */
+    public function leaveTeams($ids)
+    {
+        if (!is_array($ids)) {
+            $ids[] = $ids;
+        }
+
+        $params = [
+            'do' => 'leave',
+            'data' => json_encode(['teams' => $ids])
+        ];
+        
+        $response = $this->getSite()->getRequest($this->uriBuilder() . '/' . $this->id, $params);
+        
+        return $this->setData($response[$this->getResourceName()][0]);
+    }
 }
