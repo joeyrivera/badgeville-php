@@ -35,7 +35,7 @@ use Badgeville\Test\TestAbstract;
  */
 class AttributesTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Attributes';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Attributes';
     protected $resourceName = 'attributes';
     protected $findJson = '';
     

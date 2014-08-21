@@ -24,17 +24,21 @@
  * THE SOFTWARE.
  */
 
-namespace Badgeville\Test\Sites\Players\MissionHistories;
+namespace Badgeville\Api\Cairo\Sites\Players;
 
-use Badgeville\Test\TestAbstract;
+use Badgeville\Api\Cairo\ResourceAbstract;
 
 /**
- * Tests for Rewards
+ * Description of Players
  *
  * @author Joey Rivera <joey1.rivera@gmail.com>
  */
-class RewardsTest extends TestAbstract
+class Missions extends ResourceAbstract
 {
-    protected $namespace = '\Badgeville\Api\Cairo\Sites\Players\MissionHistories\Rewards';
-    protected $resourceName = 'rewards';
+    protected $resourceName = 'missions';
+    
+    public function getResourceName()
+    {
+        return $this->resourceName;
+    }
 }

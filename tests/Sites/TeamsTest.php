@@ -35,6 +35,6 @@ use Badgeville\Test\TestAbstract;
  */
 class TeamsTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Teams';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Teams';
     protected $resourceName = 'teams';
 }

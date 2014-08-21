@@ -1,7 +1,7 @@
 #Badgeville Cairo SDK for PHP
 ==============
 
-version 0.1
+version 0.1 - NOT STABLE
 
 This ia a work in progress and lots of things will be changing still. Hopefully it 
 won't take too long to get a beta ready. The idea is to provide a library that is 
@@ -38,7 +38,7 @@ To start using the library you need create a site instance passing it the site i
 and setting the client to a GuzzleHttp\Client instance.
 
 ```php
-use Badgeville\Cairo\Sites;
+use Badgeville\Api\Cairo\Sites;
 $site = new Sites($siteId);
 $site->setClient(new GuzzleHttp\Client($params));
 ```

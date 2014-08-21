@@ -35,6 +35,6 @@ use Badgeville\Test\TestAbstract;
  */
 class JobsTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Jobs';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Jobs';
     protected $resourceName = 'jobs';
 }

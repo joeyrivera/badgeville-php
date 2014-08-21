@@ -35,6 +35,6 @@ use Badgeville\Test\TestAbstract;
  */
 class ProgressesTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Players\Progresses';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Players\Progresses';
     protected $resourceName = 'progresses';
 }

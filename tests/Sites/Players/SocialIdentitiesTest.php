@@ -35,6 +35,6 @@ use Badgeville\Test\TestAbstract;
  */
 class SocialIdentitiesTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Players\SocialIdentities';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Players\SocialIdentities';
     protected $resourceName = 'socialidentities';
 }

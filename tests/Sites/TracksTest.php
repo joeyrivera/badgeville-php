@@ -35,6 +35,6 @@ use Badgeville\Test\TestAbstract;
  */
 class TracksTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Tracks';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Tracks';
     protected $resourceName = 'tracks';
 }

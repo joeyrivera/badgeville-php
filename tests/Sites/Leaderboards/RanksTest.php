@@ -35,6 +35,6 @@ use Badgeville\Test\TestAbstract;
  */
 class RanksTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Leaderboards\Ranks';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Leaderboards\Ranks';
     protected $resourceName = 'ranks';
 }

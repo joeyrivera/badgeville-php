@@ -34,7 +34,9 @@ require_once 'config.php';
 $resources = [];
 $data = [];
 
-$path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Badgeville' . DIRECTORY_SEPARATOR . 'Cairo' . DIRECTORY_SEPARATOR . 'Sites';
+// figure out namespace path and translate into filesystem path
+$namepacePath = str_replace('\\', DIRECTORY_SEPARATOR, get_class($site));
+$path = dirname((__DIR__)) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $namepacePath;
 
 // create map of directory structure to render the menu dynamically
 $dirArray = mapDir($path);

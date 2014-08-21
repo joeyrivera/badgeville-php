@@ -38,7 +38,7 @@ use GuzzleHttp\Stream\Stream;
  */
 class SitesTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites';
     protected $resourceName = 'sites';
     
     private $playersJson = '{"players":[{"id":"53d7dd7ec3fcd8c990006c28","name":"Joey Rivera","display_name":null,"first_name":null,"last_name":null,"image":"https://sandbox.badgeville.com/images/misc/missing/bar/user_nopicture.png","units":{"points":{"id":null,"display_name":"Points","name":"points","abbreviation":"pts","type":"points","order":null,"all":0.0,"year":0.0,"month":0.0,"week":0.0,"day":0.0}}}],"_context_info":{"offset":0,"limit":1}}';
@@ -50,7 +50,7 @@ class SitesTest extends TestAbstract
      */
     public function testConstructExceptionNotDirectly()
     {
-        $this->assertInstanceOf('\Badgeville\Cairo\Sites', new $this->namespace());
+        $this->assertInstanceOf('\Badgeville\Api\Cairo\Sites', new $this->namespace());
     }
     
     /**
@@ -58,7 +58,7 @@ class SitesTest extends TestAbstract
      */
     public function testSetClientExceptionInvalidClient()
     {
-        $site = new \Badgeville\Cairo\Sites();
+        $site = new \Badgeville\Api\Cairo\Sites();
         $site->setClient('asdf');
     }
     
@@ -67,7 +67,7 @@ class SitesTest extends TestAbstract
      */
     public function testConstructExceptionInvalidConfigValues()
     {
-        new \Badgeville\Cairo\Sites([
+        new \Badgeville\Api\Cairo\Sites([
             'url' => '',
             'apiVersion' => '',
             'apiKey' => '',
@@ -78,7 +78,7 @@ class SitesTest extends TestAbstract
     public function testConstruct()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('\Badgeville\Cairo\Sites', $site);
+        $this->assertInstanceOf('\Badgeville\Api\Cairo\Sites', $site);
         
         $site->setClient(new \GuzzleHttp\Client());
         
@@ -154,19 +154,19 @@ class SitesTest extends TestAbstract
     public function testCallPlayers()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players', $site->players());
+        $this->assertInstanceOf('Badgeville\Api\Cairo\Sites\Players', $site->players());
     }
     
     public function testCallPlayersActivities()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players\Activities', $site->players('123')->activities());
+        $this->assertInstanceOf('Badgeville\Api\Cairo\Sites\Players\Activities', $site->players('123')->activities());
     }
     
     public function testCallPlayersActivitiesBehaviors()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players\Activities\Behaviors', $site->players('123')->activities('456')->behaviors());
+        $this->assertInstanceOf('Badgeville\Api\Cairo\Sites\Players\Activities\Behaviors', $site->players('123')->activities('456')->behaviors());
     }
     
     /**
@@ -175,6 +175,6 @@ class SitesTest extends TestAbstract
     public function testCallPlayersActivitiesBehaviorsExceptionNoParentId()
     {
         $site = $this->getValidSite();
-        $this->assertInstanceOf('Badgeville\Cairo\Sites\Players\Activities\Behaviors', $site->players()->activities()->behaviors());
+        $this->assertInstanceOf('Badgeville\Api\Cairo\Sites\Players\Activities\Behaviors', $site->players()->activities()->behaviors());
     }
 }

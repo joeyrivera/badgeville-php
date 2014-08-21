@@ -56,23 +56,28 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
             $config['adapter'] = $mockAdapter;
         }
         
-        $site = new \Badgeville\Cairo\Sites($config['siteId']);
+        $site = new \Badgeville\Api\Cairo\Sites($config['siteId']);
         return $site->setClient(new \GuzzleHttp\Client($config));
     }
     
+    /**
+     * return a valid instance of a resource to test
+     * 
+     * @todo clean up, don't like how this works
+     */
     protected function getValidInstance($mockAdapter = null)
     {
         $site = $this->getValidSite($mockAdapter);
         
         // to split off namespace part until after site
-        $string = substr($this->namespace, 24);
+        $string = substr($this->namespace, strlen(get_class($site)) + 2);
         
         if (empty($string)) {
             return $site;
         }
         
         $parts = explode('\\', $string);
-        
+
         $instance = $site;
         foreach ($parts as $part) {
             $name = strtolower($part);
@@ -96,6 +101,9 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($this->namespace, $this->getValidInstance());
     }
     
+    /**
+     * make sure the name is lower case alpha
+     */
     public function testGetResourceName()
     {
         $this->assertTrue(ctype_lower($this->getValidInstance()->getResourceName()));
@@ -107,10 +115,10 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
         $instance = $this->getValidInstance();
         
         // only should be null for site
-        if ($instance instanceof \Badgeville\Cairo\Sites) {
+        if ($instance instanceof \Badgeville\Api\Cairo\Sites) {
             $this->assertNull($instance->getParent());
         } else {
-            $this->assertInstanceOf('\Badgeville\Cairo\ResourceInterface', $instance->getParent());
+            $this->assertInstanceOf('\Badgeville\Api\Cairo\ResourceInterface', $instance->getParent());
         }
     }
     
@@ -120,7 +128,7 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
         $data = $instance->toArray();
         $this->assertInternalType('array', $data);
         
-        if ($instance instanceof \Badgeville\Cairo\Sites) {
+        if ($instance instanceof \Badgeville\Api\Cairo\Sites) {
             $this->assertEquals('123asdf', $instance->id);
             $this->assertEquals('123asdf', $data['id']);
         } else {
@@ -131,7 +139,7 @@ abstract class TestAbstract extends \PHPUnit_Framework_TestCase
     
     public function testGetSite()
     {
-        $this->assertInstanceOf('\Badgeville\Cairo\Sites', $this->getValidInstance()->getSite());
+        $this->assertInstanceOf('\Badgeville\Api\Cairo\Sites', $this->getValidInstance()->getSite());
     }
     
     public function testSetData()

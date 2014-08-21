@@ -39,7 +39,7 @@ use GuzzleHttp\Stream\Stream;
  */
 class BehaviorsTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Behaviors';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Behaviors';
     protected $resourceName = 'behaviors';
     protected $findJson = '{"behaviors":[{"id":"53d662b1e800d5affe0067ec","name":"Test_5","image":"hand","units":{"points":{"id":null,"display_name":"Points","name":"points","abbreviation":"pts","type":"points","order":null,"possible":5}}}],"_context_info":{}}';
     

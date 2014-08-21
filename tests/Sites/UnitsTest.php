@@ -35,6 +35,6 @@ use Badgeville\Test\TestAbstract;
  */
 class UnitsTest extends TestAbstract
 {
-    protected $namespace = '\Badgeville\Cairo\Sites\Units';
+    protected $namespace = '\Badgeville\Api\Cairo\Sites\Units';
     protected $resourceName = 'units';
 }
