@@ -27,7 +27,7 @@
 require_once 'config.php';
 
 
-$players = $site->players()->findAll(['limit' => 5, 'offset' => 1]);
+$players = $site->players()->findAll(['limit' => 5, 'offset' => 0]);
 
 var_dump($players->getPagination());
 var_dump($players->toArray());

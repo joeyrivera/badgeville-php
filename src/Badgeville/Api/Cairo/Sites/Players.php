@@ -28,6 +28,7 @@ namespace Badgeville\Api\Cairo\Sites;
 
 use Badgeville\Api\Cairo\ResourceAbstract;
 use \Exception;
+use \InvalidArgumentException;
 
 /**
  * Description of Players
@@ -73,15 +74,16 @@ class Players extends ResourceAbstract
         $data = filter_var_array($params, $properties, false);
 
         // make sure we have the required fields covered
+        // required must be within an array for now
         foreach ($properties as $key => $value) {
-            if (isset($value['required']) && $value['required'] === true && empty($data[$key])) {
-                throw new Exception("The required field {$key} is missing or not valid.");
+            if (is_array($value) && in_array('required', $value) && empty($data[$key])) {
+                throw new InvalidArgumentException("The required field {$key} is missing or not valid.");
             }
         }
         
         $params = [
             'do' => 'create',
-            'data' => json_encode($data, JSON_UNESCAPED_SLASHES) // needed or messes up urls
+            'data' => json_encode($data, JSON_UNESCAPED_SLASHES) // needed or messes up image urls
         ];
 
         $response = $this->getSite()->getRequest($this->uriBuilder(), $params);

@@ -102,9 +102,7 @@ class SitesTest extends TestAbstract
     public function testGetRequestExceptionErrorInResponse()
     {
         $mockAdapter = new MockAdapter(function (TransactionInterface $trans) {
-            $response = new Response(200, [], Stream::factory($this->errorJson));
-            
-            return $response;
+            return new Response(200, [], Stream::factory($this->errorJson));
         });
         
         $site = $this->getValidSite($mockAdapter);
@@ -114,9 +112,7 @@ class SitesTest extends TestAbstract
     public function testGetRequest()
     {
         $mockAdapter = new MockAdapter(function (TransactionInterface $trans) {
-            $response = new Response(200, [], Stream::factory($this->playersJson));
-            
-            return $response;
+            return new Response(200, [], Stream::factory($this->playersJson));
         });
         
         $site = $this->getValidSite($mockAdapter);
