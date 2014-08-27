@@ -28,6 +28,7 @@ namespace Badgeville\Api\Cairo\Sites\Players;
 
 use Badgeville\Api\Cairo\ResourceAbstract;
 use \DateTime;
+use \InvalidArgumentException;
 
 /**
  * Description of Activities
@@ -38,6 +39,11 @@ class Activities extends ResourceAbstract
 {
     protected $resourceName = 'activities';
     
+    protected $queryable = [
+        'id',
+        'verb'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;
@@ -46,34 +52,34 @@ class Activities extends ResourceAbstract
     /**
      * Creates a new activity for a player
      * 
-     * @param array $params
+     * can pass in a verb string as the data or an array of verb and any other 
+     * custom attribute customized in the badgeville system for that site and
+     * activity
+     * 
+     * @param mixed $data
      * @return \Badgeville\Api\Cairo\Sites\Players\Activities
      */
-    public function create($params)
+    public function create($data, $params = [])
     {
-        // rules for different properties
-        $properties = [
-            'verb' => [
-                'required',
-                'filter' => FILTER_SANITIZE_STRING,
-            ]
-        ];
-        
-        // clean params up
-        $data = filter_var_array($params, $properties, false);
-
-        // make sure we have the required fields covered
-        foreach ($properties as $key => $value) {
-            if (isset($value['required']) && $value['required'] === true && empty($data[$key])) {
-                throw new Exception("The required field {$key} is missing or not valid.");
-            }
+        if (is_array($data) && !array_key_exists('verb', $data)) {
+            throw new InvalidArgumentException("The required field verb is missing or not valid.");
         }
         
-        $params = [
-            'do' => 'create',
-            'data' => json_encode($data, JSON_UNESCAPED_SLASHES) // needed or messes up urls
-        ];
+        // grab the verb to test it
+        $data = is_array($data) ? $data : ['verb' => $data];
+        
+        // clean params up
+        $data['verb'] = filter_var($data['verb'], FILTER_SANITIZE_STRING, FILTER_NULL_ON_FAILURE);
 
+        // make sure we have the required fields covered
+        if (empty($data['verb'])) {
+            throw new InvalidArgumentException("The required field verb is missing or not valid.");
+        }
+        
+        // setup params
+        $params['do'] = 'create';
+        $params['data'] = json_encode($data);
+        
         $response = $this->getSite()->getRequest($this->uriBuilder(), $params);
         
         $item = clone $this;

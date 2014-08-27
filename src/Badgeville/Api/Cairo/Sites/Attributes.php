@@ -37,6 +37,11 @@ class Attributes extends ResourceAbstract
 {
     protected $resourceName = 'attributes';
     
+    protected $queryable = [
+        'type',
+        'key'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

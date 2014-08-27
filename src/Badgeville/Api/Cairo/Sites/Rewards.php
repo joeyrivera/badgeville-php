@@ -37,6 +37,14 @@ class Rewards extends ResourceAbstract
 {
     protected $resourceName = 'rewards';
     
+    protected $queryable = [
+        'definition_id', 
+        'name',
+        'type',
+        'created_at',
+        'category'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

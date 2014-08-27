@@ -96,4 +96,3 @@ class PlayersTest extends TestAbstract
         $this->getValidInstance()->create($params);
     }
 }
-

@@ -37,6 +37,13 @@ class Tracks extends ResourceAbstract
 {
     protected $resourceName = 'tracks';
     
+    protected $queryable = [
+        'id', 
+        'name', 
+        'type',
+        'category'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

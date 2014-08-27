@@ -37,6 +37,13 @@ class Missions extends ResourceAbstract
 {
     protected $resourceName = 'missions';
     
+    protected $queryable = [
+        'id',
+        'name',
+        'type',
+        'category'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

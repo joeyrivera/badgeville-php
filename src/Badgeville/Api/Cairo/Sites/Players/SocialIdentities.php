@@ -37,6 +37,13 @@ class SocialIdentities extends ResourceAbstract
 {
     protected $resourceName = 'socialidentities';
     
+    protected $queryable = [
+        'id',
+        'handle',
+        'social_id',
+        'social_type'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

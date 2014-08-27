@@ -28,27 +28,43 @@ require_once 'config.php';
 
 /** create **/
 //$result = $site->players()->create([
-//    'name' => 'Joey <asdf>  Tester8',
-//    'email' => 'joeyrivera@air-watch.com8',
-//    'sdfgs' => 'asdf'
+//    'email' => '22293@airwatchuser.com'
 //]);
 
+$playerId = '53f76205e800d5f9e800177a';
+
 /** update **/
-//$result = $site->players()->find('53dbc9278803dad6a3000ffa');
+//$result = $site->players()->find($playerId);
 //$result->display_name = 'testing5';
 //$result->update(); //or $site->players()->update($player);
 
 /** join team **/
-//$result = $site->players('53e12cfd6173b18161002e2a')->joinTeams(['53e120c6c3fcd8440d002dc3','53e12012446f2dbe8d003309']);
+//$result = $site->players($playerId)->joinTeams(['53e120c6c3fcd8440d002dc3','53e12012446f2dbe8d003309']);
 
 /** leave team **/
-//$result = $site->players('53e12cfd6173b18161002e2a')->leaveTeams(['53e120c6c3fcd8440d002dc3']);
+//$result = $site->players($playerId)->leaveTeams(['53e120c6c3fcd8440d002dc3']);
 
-
-/** create activity **/
-//$result = $site->players('53dbc9278803dad6a3000ffa')->activities()->create(['verb' => 'logged in sdk']);
+/** create activity, bring back rewards and missions that might have been trigger by this call **/
+//$result = $site->players($playerId)->activities()->create('testing-update', ['includes' => 'rewards', 'fields' => 'custom']);
+//$result = $site->players($playerId)->activities()->create(['verb' => 'testing-update', 'device' => 'myphone'], ['includes' => 'rewards', 'fields' => 'custom']);
 
 /** update activity history **/
-$result = $site->players('53dbc9278803dad6a3000ffa')->activities('53e134a0c3fcd8b302002fb9')->updateHistory();
+//$result = $site->players($playerId)->activities('53f7a411c3fcd80515001e98')->updateHistory();
+// or create activity then call
+//$result->updateHistory();
+
+/** get latest activity **/
+//$result = $site->players($playerId)->activities()->findAll([
+//    'verb' => 'newmeta',
+//    'includes' => 'rewards,missionhistories', 
+//    'limit' => 30, 
+//    'fields' => 'history'
+//]);
+
+/** get rewards by category **/
+$result = $site->rewards()->findAll([
+    'category' => 'asp',
+    'fields' => 'category'
+]);
 
 var_dump($result->toArray());

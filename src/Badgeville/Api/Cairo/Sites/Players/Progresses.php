@@ -37,6 +37,11 @@ class Progresses extends ResourceAbstract
 {
     protected $resourceName = 'progresses';
     
+    protected $queryable = [
+        'definition_id',
+        'type'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

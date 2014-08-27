@@ -62,9 +62,7 @@ $player = $site->players()->create([
 $player->display_name = 'testing2';
 $player->save();
 
-$activity = $site->players('234lkj234lkj234lkj')->activities()->create([
-    'verb' => 'logged'
-]);
+$activity = $site->players('234lkj234lkj234lkj')->activities()->create('logged');
 ```
 
 ###Todos

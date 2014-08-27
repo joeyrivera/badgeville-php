@@ -37,6 +37,15 @@ class MissionHistories extends ResourceAbstract
 {
     protected $resourceName = 'missionhistories';
     
+    protected $queryable = [
+        'id',
+        'definition_id',
+        'created_at',
+        'name',
+        'type',
+        'category'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

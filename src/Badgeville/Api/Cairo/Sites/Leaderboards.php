@@ -37,6 +37,12 @@ class Leaderboards extends ResourceAbstract
 {
     protected $resourceName = 'leaderboards';
     
+    protected $queryable = [
+        'id',
+        'name',
+        'display_name'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

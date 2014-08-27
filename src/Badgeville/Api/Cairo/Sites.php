@@ -42,6 +42,11 @@ class Sites extends ResourceAbstract
 {
     protected $resourceName = 'sites';
     
+    protected $queryable = [
+        'name',
+        'url'
+    ];
+    
     /**
      * Track the guzzle client for api calls
      * 
@@ -109,7 +114,7 @@ class Sites extends ResourceAbstract
                 $message .= $e->getResponse() . "\n";
             }
             
-            throw new Exception($message);
+            throw new Exception($message, $e->getCode());
         }
         
         return $response;

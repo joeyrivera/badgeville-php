@@ -38,19 +38,29 @@ use \InvalidArgumentException;
 class Players extends ResourceAbstract
 {
     protected $resourceName = 'players';
-    
+
     public function getResourceName()
     {
         return $this->resourceName;
     }
     
+    public function setCustom($key, $value)
+    {
+        $this->data['custom'][$key] = $value;
+        
+        return $this;
+    }
+    
     /**
      * Creates a new players instance
+     * 
+     * if any data property is passed that is not in the list of properties,
+     * it's assumed to be a custom property and passed to Badgeville as such
      * 
      * @param array $params
      * @return \Badgeville\Api\Cairo\Sites\Players
      */
-    public function create($params)
+    public function create($data, $params = [])
     {
         // rules for different properties
         $properties = [
@@ -66,19 +76,29 @@ class Players extends ResourceAbstract
             'admin' => [
                 'filter' => FILTER_VALIDATE_BOOLEAN,
                 'flags' => FILTER_NULL_ON_FAILURE
-            ],
-            //'custom' => FILTER_SANITIZE_STRING
+            ]
         ];
         
+        // check for custom params, if they aren't in the main list assume custom
+        $custom = array_diff_key($data, $properties);
+        
         // clean params up
-        $data = filter_var_array($params, $properties, false);
-
+        $data = filter_var_array($data, $properties, false);
+        
         // make sure we have the required fields covered
         // required must be within an array for now
         foreach ($properties as $key => $value) {
             if (is_array($value) && in_array('required', $value) && empty($data[$key])) {
                 throw new InvalidArgumentException("The required field {$key} is missing or not valid.");
             }
+        }
+        
+        // add in params
+        $data = array_merge($data, $params);
+
+        // any custom params to add?
+        if (!empty($custom)) {
+            $data['custom'] = $custom;
         }
         
         $params = [
@@ -100,7 +120,7 @@ class Players extends ResourceAbstract
      * @param \Badgeville\Api\Cairo\Sites\Players $obj
      * @return \Badgeville\Api\Cairo\Sites\Players
      */
-    public function update($obj = null)
+    public function update($obj = null, $params = [])
     {
         $useSelf = false;
         if ($obj instanceof $this) {
@@ -132,6 +152,13 @@ class Players extends ResourceAbstract
         // clean params up
         $data = filter_var_array($data, $properties, false);
         
+        if (!empty($this->data['custom'])) {
+            $custom = array_filter($this->data['custom'], function ($value) {
+                return is_null($value) ? false : true;
+            });
+            $data = array_merge($data, ['custom' => $custom]);
+        }
+
         $params = [
             'do' => 'update',
             'data' => json_encode($data, JSON_UNESCAPED_SLASHES) // needed or messes up urls
@@ -155,11 +182,9 @@ class Players extends ResourceAbstract
      * @param mixed $params can pass in an id or array of ids
      * @return \Badgeville\Api\Cairo\Sites\Players
      */
-    public function joinTeams($ids)
+    public function joinTeams($teamIds)
     {
-        if (!is_array($ids)) {
-            $ids[] = $ids;
-        }
+        $ids = is_array($teamIds) ? $teamIds : [$teamIds];
 
         $params = [
             'do' => 'join',

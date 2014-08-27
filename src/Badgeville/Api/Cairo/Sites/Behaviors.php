@@ -37,6 +37,12 @@ class Behaviors extends ResourceAbstract
 {
     protected $resourceName = 'behaviors';
     
+    protected $queryable = [
+        'id',
+        'name',
+        'verb'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;

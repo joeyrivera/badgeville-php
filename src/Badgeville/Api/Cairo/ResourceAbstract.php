@@ -238,6 +238,25 @@ abstract class ResourceAbstract implements ResourceInterface
         $params['offset'] = !empty($params['offset']) ? $params['offset'] : 0; // 30 is max limit
         $params['limit'] = !empty($params['limit']) ? $params['limit'] : 30; // 30 is max limit
         
+        // take care of queryables
+        if (!empty($this->queryable)) {
+            $query = '{';
+            foreach ($params as $key => $value) {
+                if (!in_array($key, $this->queryable)) {
+                    continue;
+                }
+
+                $query .= "{$key}:'{$value}',";
+                unset($params[$key]);
+            }
+
+            $query = substr($query, 0, -1) . "}";
+
+            if (strlen($query) > 1) {
+                $params['query'] = $query;
+            }
+        }
+        
         $uri = $this->uriBuilder();
         $response = $this->getSite()->getRequest($uri, $params);
 

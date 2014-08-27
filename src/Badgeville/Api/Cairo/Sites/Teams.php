@@ -38,6 +38,12 @@ class Teams extends ResourceAbstract
 {
     protected $resourceName = 'teams';
     
+    protected $queryable = [
+        'id', 
+        'name', 
+        'display_name'
+    ];
+    
     public function getResourceName()
     {
         return $this->resourceName;
